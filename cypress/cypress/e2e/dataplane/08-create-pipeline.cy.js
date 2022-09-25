@@ -34,7 +34,8 @@ describe('Create pipelines', function () {
         // Add
         cy.get('#Triggers div:nth-child(3)') // Schedule node
             .should('exist', { timeout: 6000 })
-            .trigger('dragstart', { dataTransfer });
+            .trigger('dragstart', { dataTransfer })
+            .should('exist', { timeout: 6000 });
         cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('drop', { dataTransfer });
         cy.contains('Trigger - Scheduler')
             .next()
@@ -55,7 +56,8 @@ describe('Create pipelines', function () {
         // Python node
         // Add
         cy.get('#Processors div:nth-child(2)') // Python node
-            .trigger('dragstart', { dataTransfer });
+            .trigger('dragstart', { dataTransfer })
+            .should('exist', { timeout: 6000 });
         cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('drop', { dataTransfer });
         cy.get('[type=submit]').should('exist', { timeout: 6000 }).click(); // Save
 
@@ -68,7 +70,8 @@ describe('Create pipelines', function () {
         // Add
         cy.get('#Checkpoints div:nth-child(2)') // Checkpoint node
             .should('exist', { timeout: 6000 })
-            .trigger('dragstart', { dataTransfer });
+            .trigger('dragstart', { dataTransfer })
+            .should('exist', { timeout: 6000 });
         cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('drop', { dataTransfer });
         // Move
         cy.get('.react-flow__node-checkpointNode').should('exist', { timeout: 6000 }).trigger('mousedown');
@@ -139,7 +142,8 @@ describe('Create pipelines', function () {
         // Add
         cy.get('#Triggers div:nth-child(2)') // Play node //
             .should('exist', { timeout: 6000 })
-            .trigger('dragstart', { dataTransfer });
+            .trigger('dragstart', { dataTransfer })
+            .should('exist', { timeout: 6000 });
         cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('drop', { dataTransfer });
         // Move
         cy.get('.react-flow__node-playNode').should('exist', { timeout: 6000 }).trigger('mousedown');
@@ -150,7 +154,8 @@ describe('Create pipelines', function () {
         // Add
         cy.get('#Processors div:nth-child(2)') // Python node
             .should('exist', { timeout: 6000 })
-            .trigger('dragstart', { dataTransfer });
+            .trigger('dragstart', { dataTransfer })
+            .should('exist', { timeout: 6000 });
         cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('drop', { dataTransfer });
         cy.get('[type=submit]').should('exist', { timeout: 6000 }).click(); // Save
 
@@ -163,7 +168,8 @@ describe('Create pipelines', function () {
         // Add
         cy.get('#Checkpoints div:nth-child(2)') // Checkpoint node
             .should('exist', { timeout: 6000 })
-            .trigger('dragstart', { dataTransfer });
+            .trigger('dragstart', { dataTransfer })
+            .should('exist', { timeout: 6000 });
         cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('drop', { dataTransfer });
         // Move
         cy.get('.react-flow__node-checkpointNode').should('exist', { timeout: 6000 }).trigger('mousedown');
