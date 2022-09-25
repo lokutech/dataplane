@@ -1,134 +1,2316 @@
 name: Cypress-tests
 
 on:
-  push:
-    branches:
-      - cypress-test
+    push:
+        branches:
+            - cypress-test
 
 jobs:
-  tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      
-      - name: Build the stack
-        run: docker-compose -f cypress-docker-compose.yaml up --build -d
+    tests:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
 
-      # - name: Get the ip address of the server
-      #   run: |
-      #     echo "SERVER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' dataplane_mainapp-cypresstest_1)" >> $GITHUB_ENV
+            - name: Build the stack
+              run: docker-compose -f cypress-docker-compose.yaml up --build -d
 
-      - name: Server health check
-        uses: jtalk/url-health-check-action@v2
-        with:
-          url: http://127.0.0.1:9002/healthz
-          max-attempts: 7
-          retry-delay: 5s
-          retry-all: true
-      
-      - name: Cypress run
-        if: always()
-        uses: cypress-io/github-action@v4
-        with:
-          working-directory: ./cypress
-          build: yarn
-          browser: chrome
-#           record: true
-#         env:
-#           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            # - name: Get the ip address of the server
+            #   run: |
+            #     echo "SERVER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' dataplane_mainapp-cypresstest_1)" >> $GITHUB_ENV
 
-      - name: Clear database
-        if: always()
-        run: |
-          docker-compose -f cypress-docker-compose.yaml down -v
-          docker-compose -f cypress-docker-compose.yaml up --build -d
-        
-      - name: Server health check
-        uses: jtalk/url-health-check-action@v2
-        with:
-          url: http://127.0.0.1:9002/healthz
-          max-attempts: 7
-          retry-delay: 5s
-          retry-all: true
-                
-      - name: Cypress run 2
-        if: always()
-        uses: cypress-io/github-action@v4
-        with:
-          working-directory: ./cypress
-          build: yarn
-          browser: chrome
-      
-      - name: Clear database
-        if: always()
-        run: docker-compose -f cypress-docker-compose.yaml down -v
-        
-      - name: Rebuild docker image
-        run: docker-compose -f cypress-docker-compose.yaml up --build -d
-        
-      - name: Server health check
-        uses: jtalk/url-health-check-action@v2
-        with:
-          url: http://127.0.0.1:9002/healthz
-          max-attempts: 7
-          retry-delay: 5s
-          retry-all: true
-          
-      - name: Cypress run 3
-        if: success() || failure()
-        uses: cypress-io/github-action@v4
-        with:
-          working-directory: ./cypress
-          build: yarn
-          browser: chrome
-          
-      - name: Cypress run 4
-        if: success() || failure()
-        uses: cypress-io/github-action@v4
-        with:
-          working-directory: ./cypress
-          build: yarn
-          browser: chrome
+            - name: Server health check
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
 
-      - name: Cypress run 5
-        uses: cypress-io/github-action@v4
-        with:
-          working-directory: ./cypress
-          build: yarn
-          browser: chrome
+            - name: Cypress run
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+            #           record: true
+            #         env:
+            #           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+            #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cypress run 6
-        uses: cypress-io/github-action@v4
-        with:
-          working-directory: ./cypress
-          build: yarn
-          browser: chrome
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
 
-      - name: Cypress run 7
-        uses: cypress-io/github-action@v4
-        with:
-          working-directory: ./cypress
-          build: yarn
-          browser: chrome
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
 
-      - name: Cypress run 8
-        uses: cypress-io/github-action@v4
-        with:
-          working-directory: ./cypress
-          build: yarn
-          browser: chrome
-          
-      - name: Cypress run 9
-        uses: cypress-io/github-action@v4
-        with:
-          working-directory: ./cypress
-          build: yarn
-          browser: chrome
-          
-      - name: Cypress run 10
-        uses: cypress-io/github-action@v4
-        with:
-          working-directory: ./cypress
-          build: yarn
-          browser: chrome
+            - name: Cypress run 2
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 3
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 4
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 5
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 6
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 7
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 8
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 9
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 10
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 11
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 12
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 13
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 14
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 15
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 16
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 17
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 18
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 19
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 20
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 21
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 22
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 23
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 24
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 25
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 26
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 27
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 28
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 29
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 30
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 31
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 32
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 33
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 34
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 35
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 36
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 37
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 38
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 39
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 40
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 41
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 42
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 43
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 44
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 45
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 46
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 47
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 48
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 49
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 50
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 51
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 52
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 53
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 54
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 55
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 56
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 57
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 58
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 59
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 60
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 61
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 62
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 63
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 64
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 65
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 66
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 67
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 68
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 69
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 70
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 71
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 72
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 73
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 74
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 75
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 76
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 77
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 78
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 79
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 80
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 81
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 82
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 83
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 84
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 85
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 86
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 87
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 88
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 89
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 90
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 91
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 92
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 93
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 94
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 95
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 96
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 97
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 98
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 99
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
+
+            - name: Clear database
+              if: always()
+              run: |
+                  docker-compose -f cypress-docker-compose.yaml down -v
+                  docker-compose -f cypress-docker-compose.yaml up --build -d
+
+            - name: Server health check
+              if: always()
+              uses: jtalk/url-health-check-action@v2
+              with:
+                  url: http://127.0.0.1:9002/healthz
+                  max-attempts: 7
+                  retry-delay: 5s
+                  retry-all: true
+
+            - name: Cypress run 100
+              if: always()
+              uses: cypress-io/github-action@v4
+              with:
+                  working-directory: ./cypress
+                  build: yarn
+                  browser: chrome
