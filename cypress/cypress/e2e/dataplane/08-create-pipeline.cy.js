@@ -2,7 +2,7 @@ Cypress.Commands.add('drag', (selector, { x, y }) => {
     return cy.get(selector).trigger('mousedown', { which: 1 }).trigger('mousemove', { clientX: x, clientY: y }).trigger('mouseup', { force: true });
 });
 
-describe('Create pipelines', function () {
+describe('Create pipelines', { retries: 5 }, function () {
     it('Login', function () {
         cy.visit('http://localhost:9002/webapp/login');
 
