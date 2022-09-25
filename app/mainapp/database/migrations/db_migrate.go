@@ -1,17 +1,16 @@
 package migrations
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database/models"
 	"fmt"
 	"log"
 	"os"
 	"strconv"
 	"strings"
 
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-
 	// "gorm.io/gorm/clause"
-	"github.com/dataplane-app/dataplane/mainapp/code_editor/filesystem"
+	"dataplane/mainapp/code_editor/filesystem"
 
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/logger"
@@ -23,7 +22,7 @@ import (
 
 func Migrate() {
 
-	migrateVersion := "0.0.53"
+	migrateVersion := "0.0.39"
 
 	connectURL := fmt.Sprintf(
 		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
@@ -87,9 +86,6 @@ func Migrate() {
 			&models.PipelineNodes{},
 			&models.PipelineEdges{},
 			&models.PipelineRuns{},
-			&models.PipelineApiTriggerRuns{},
-			&models.PipelineApiTriggers{},
-			&models.PipelineApiKeys{},
 			&models.ResourceTypeStruct{},
 			&models.Secrets{},
 
@@ -104,11 +100,6 @@ func Migrate() {
 			&models.PlatformLeader{},
 			&models.Scheduler{},
 			&models.SchedulerLock{},
-
-			// ---- Files and folders ---
-			&models.CodeFilesStore{},
-			&models.CodeFilesCache{},
-			&models.CodeNodeCache{},
 			&models.CodeFolders{},
 			&models.CodeFiles{},
 			&models.CodeGitCommits{},
@@ -123,9 +114,6 @@ func Migrate() {
 			&models.DeployPipelineEdges{},
 			&models.DeployCodeFolders{},
 			&models.DeployCodeFiles{},
-			&models.DeployFilesStore{},
-			&models.DeployCodeFilesCache{},
-			&models.DeployCodeNodeCache{},
 		)
 		if err1 != nil {
 			panic(err1)
@@ -139,7 +127,7 @@ func Migrate() {
 
 		hypertable := "SELECT create_hypertable('logs_platform', 'created_at', if_not_exists => TRUE, chunk_time_interval=> INTERVAL '7 Days');"
 
-		if hypertable != "" && dpconfig.DPDatabase == "timescaledb" {
+		if hypertable != "" && config.DPDatabase == "timescaledb" {
 			if err := dbConn.Model(&models.LogsPlatform{}).Exec(hypertable).Error; err != nil {
 				panic(err)
 			}
@@ -147,7 +135,7 @@ func Migrate() {
 
 		hypertable = "SELECT create_hypertable('logs_workers', 'created_at', if_not_exists => TRUE, chunk_time_interval=> INTERVAL '7 Days');"
 
-		if hypertable != "" && dpconfig.DPDatabase == "timescaledb" {
+		if hypertable != "" && config.DPDatabase == "timescaledb" {
 			if err := dbConn.Model(&models.LogsPlatform{}).Exec(hypertable).Error; err != nil {
 				panic(err)
 			}
@@ -155,7 +143,7 @@ func Migrate() {
 
 		hypertable = "SELECT create_hypertable('logs_code_run', 'created_at', if_not_exists => TRUE, chunk_time_interval=> INTERVAL '7 Days');"
 
-		if hypertable != "" && dpconfig.DPDatabase == "timescaledb" {
+		if hypertable != "" && config.DPDatabase == "timescaledb" {
 			if err := dbConn.Model(&models.LogsPlatform{}).Exec(hypertable).Error; err != nil {
 				panic(err)
 			}

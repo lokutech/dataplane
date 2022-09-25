@@ -5,15 +5,13 @@ package privateresolvers
 
 import (
 	"context"
+	"dataplane/mainapp/auth"
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	privategraphql "dataplane/mainapp/graphql/private"
+	"dataplane/mainapp/logging"
 	"errors"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/auth"
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	privategraphql "github.com/dataplane-app/dataplane/mainapp/graphql/private"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
 )
 
 func (r *mutationResolver) UpdateMe(ctx context.Context, input *privategraphql.AddUpdateMeInput) (*models.Users, error) {
@@ -34,7 +32,7 @@ func (r *mutationResolver) UpdateMe(ctx context.Context, input *privategraphql.A
 	}).First(&u).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("updateMe database error.")
@@ -66,7 +64,7 @@ func (r *mutationResolver) UpdateChangeMyPassword(ctx context.Context, password 
 	}).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("database error.")
@@ -87,7 +85,7 @@ func (r *queryResolver) Me(ctx context.Context) (*models.Users, error) {
 	err := database.DBConn.Where("user_id = ?", userID).First(&u).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Retrive me database error.")

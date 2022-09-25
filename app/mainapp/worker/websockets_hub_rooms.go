@@ -1,12 +1,10 @@
 package worker
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/logging"
 	"log"
 	"time"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/logging"
 
 	"github.com/gofiber/websocket/v2"
 	cmap "github.com/orcaman/concurrent-map"
@@ -46,7 +44,7 @@ func secureTimeoutq(room string, connection *websocket.Conn) {
 				// handle error
 				log.Println(err)
 			}
-			if dpconfig.MQDebug == "true" {
+			if config.MQDebug == "true" {
 				log.Println("connection unregistered by SecureTimeout")
 			}
 		}
@@ -77,13 +75,13 @@ func RunHubRooms() {
 
 			go secureTimeoutq(register.room, register.conn)
 			// go func() { Securetimeout <- 0 }()
-			if dpconfig.MQDebug == "true" {
+			if config.MQDebug == "true" {
 				log.Println("connection registered")
 			}
 
 		case message := <-broadcastq:
 
-			if dpconfig.MQDebug == "true" {
+			if config.MQDebug == "true" {
 				logging.PrintSecretsRedact("room:", message.room, "message received:", string(message.data))
 			}
 
@@ -126,7 +124,7 @@ func RunHubRooms() {
 			}
 			// Remove the client from the hub
 			// delete(clientsq, connection)
-			if dpconfig.MQDebug == "true" {
+			if config.MQDebug == "true" {
 				log.Println("connection for room:" + register.room + " unregistered")
 				// log.Println("connections:", clientsq)
 			}

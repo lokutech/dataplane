@@ -5,16 +5,13 @@ package privateresolvers
 
 import (
 	"context"
+	permissions "dataplane/mainapp/auth_permissions"
+	"dataplane/mainapp/code_editor/runcode"
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database/models"
+	privategraphql "dataplane/mainapp/graphql/private"
+	"dataplane/mainapp/logging"
 	"errors"
-
-	permissions "github.com/dataplane-app/dataplane/mainapp/auth_permissions"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/code_editor/runcode"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	privategraphql "github.com/dataplane-app/dataplane/mainapp/graphql/private"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
 )
 
 func (r *mutationResolver) RunCEFile(ctx context.Context, pipelineID string, nodeID string, fileID string, environmentID string, nodeTypeDesc string, workerGroup string, runID string) (*privategraphql.CERun, error) {
@@ -38,7 +35,7 @@ func (r *mutationResolver) RunCEFile(ctx context.Context, pipelineID string, nod
 
 	runData, err := runcode.RunCodeFile(workerGroup, fileID, environmentID, pipelineID, nodeID, nodeTypeDesc, runID)
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Failed to run code.")
@@ -76,7 +73,7 @@ func (r *mutationResolver) StopCERun(ctx context.Context, pipelineID string, run
 
 	err := runcode.RunCodeFileCancel(runID, environmentID)
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return "fail", errors.New("Failed to cancel code run.")

@@ -1,13 +1,12 @@
 package database
 
 import (
+	"dataplane/mainapp/logging"
 	"fmt"
 	"log"
 	"os"
 	"strconv"
 	"time"
-
-	"github.com/dataplane-app/dataplane/mainapp/logging"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -24,7 +23,7 @@ func DBConnect() {
 		logging.PrintSecretsRedact(err.Error())
 		log.Fatal("Failed to connect to database")
 	}
-	//DBConn.dpconfig.PrepareStmt = true
+	//DBConn.Config.PrepareStmt = true
 }
 
 func DB() (*gorm.DB, error) {

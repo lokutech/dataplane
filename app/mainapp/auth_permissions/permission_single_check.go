@@ -1,6 +1,6 @@
 package permissions
 
-import "github.com/dataplane-app/dataplane/mainapp/database"
+import "dataplane/mainapp/database"
 
 type permOutcome struct {
 	permdriver string

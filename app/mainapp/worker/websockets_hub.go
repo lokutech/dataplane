@@ -1,11 +1,10 @@
 package worker
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/logging"
 	"log"
 	"time"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
 
 	"github.com/gofiber/websocket/v2"
 )
@@ -20,7 +19,6 @@ var Securetimeout = make(chan int)
 
 func SecureTimeout(connection *websocket.Conn) {
 	time.Sleep(1 * time.Hour)
-
 	if _, ok := clients[connection]; ok {
 		unregister <- connection
 		cm := websocket.FormatCloseMessage(websocket.CloseTryAgainLater, "reconnect")
@@ -28,7 +26,7 @@ func SecureTimeout(connection *websocket.Conn) {
 			// handle error
 			log.Println(err)
 		}
-		if dpconfig.MQDebug == "true" {
+		if config.MQDebug == "true" {
 			log.Println("connection unregistered by SecureTimeout")
 		}
 	}
@@ -41,13 +39,13 @@ func RunHub() {
 			clients[connection] = client{}
 			go SecureTimeout(connection)
 			// go func() { Securetimeout <- 0 }()
-			if dpconfig.MQDebug == "true" {
+			if config.MQDebug == "true" {
 				log.Println("connection registered")
 			}
 
 		case message := <-broadcast:
 
-			if dpconfig.MQDebug == "true" {
+			if config.MQDebug == "true" {
 				logging.PrintSecretsRedact("message received:", string(message))
 			}
 
@@ -66,7 +64,7 @@ func RunHub() {
 		case connection := <-unregister:
 			// Remove the client from the hub
 			delete(clients, connection)
-			if dpconfig.MQDebug == "true" {
+			if config.MQDebug == "true" {
 				log.Println("connection unregistered")
 			}
 		}

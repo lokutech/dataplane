@@ -1,9 +1,8 @@
 package auth
 
 import (
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/logging"
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/logging"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -16,7 +15,7 @@ func Encrypt(rawPassword string) (string, error) {
 	)
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return "", err

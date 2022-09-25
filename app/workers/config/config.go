@@ -1,8 +1,7 @@
-package wrkerconfig
+package config
 
 import (
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/go-co-op/gocron"
@@ -26,11 +25,6 @@ var Scheduler *gocron.Scheduler
 
 // Debug
 var Debug string = "false"
-
-// Distributed File storage
-var FSCodeFileStorage string
-var FSCodeFileBatches int
-var FSCodeDirectory string
 
 func LoadConfig() {
 
@@ -61,24 +55,5 @@ func LoadConfig() {
 	}
 
 	CodeDirectory = os.Getenv("DP_CODE_FOLDER")
-	if CodeDirectory == "" {
-		CodeDirectory = "/appdev/code-files/"
-	}
-
-	/* --- CODE FILE FS ---- */
-	FSCodeFileStorage = os.Getenv("DP_CODE_FILE_STORAGE")
-	if FSCodeFileStorage == "" {
-		FSCodeFileStorage = "Database"
-	}
-
-	FSCodeFileBatches, _ = strconv.Atoi(os.Getenv("DP_SYNC_FILE_BATCHES"))
-	if FSCodeFileBatches == 0 {
-		FSCodeFileBatches = 100
-	}
-
-	FSCodeDirectory = os.Getenv("DP_DFS_CODE_FOLDER")
-	if FSCodeDirectory == "" {
-		FSCodeDirectory = "/appdev/dfs-code-files/"
-	}
 
 }

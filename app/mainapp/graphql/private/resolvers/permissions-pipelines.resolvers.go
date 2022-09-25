@@ -5,16 +5,13 @@ package privateresolvers
 
 import (
 	"context"
+	permissions "dataplane/mainapp/auth_permissions"
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	privategraphql "dataplane/mainapp/graphql/private"
+	"dataplane/mainapp/logging"
 	"errors"
-
-	permissions "github.com/dataplane-app/dataplane/mainapp/auth_permissions"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	privategraphql "github.com/dataplane-app/dataplane/mainapp/graphql/private"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
 
 	"gorm.io/gorm"
 )
@@ -43,7 +40,7 @@ func (r *mutationResolver) PipelinePermissionsToUser(ctx context.Context, enviro
 		userID, "specific_pipeline", resourceID, environmentID).Delete(&models.Permissions{}).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return "", errors.New("Delete pipelines permission to user database error.")
@@ -63,7 +60,7 @@ func (r *mutationResolver) PipelinePermissionsToUser(ctx context.Context, enviro
 		)
 
 		if err != nil {
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				logging.PrintSecretsRedact(err)
 			}
 			return "", errors.New("Add permission to user database error.")
@@ -97,7 +94,7 @@ func (r *mutationResolver) PipelinePermissionsToAccessGroup(ctx context.Context,
 		accessGroupID, "specific_pipeline", resourceID, environmentID).Delete(&models.Permissions{}).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return "", errors.New("Delete pipelines permission to user database error.")
@@ -117,7 +114,7 @@ func (r *mutationResolver) PipelinePermissionsToAccessGroup(ctx context.Context,
 		)
 
 		if err != nil {
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				logging.PrintSecretsRedact(err)
 			}
 			return "", errors.New("Add permission to user database error.")

@@ -1,13 +1,11 @@
 package platform
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/messageq"
 	"log"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/messageq"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -27,7 +25,7 @@ func PlatformNodeListen() {
 	messageq.NATSencoded.QueueSubscribe("mainapp-node-update", "mainapp-node-update", func(subj, reply string, msg models.PlatformNodeUpdate) {
 
 		// log.Println("Updated", msg.Leader == msg.NodeID)
-		// log.Println("Loaded leader", dpconfig.Leader)
+		// log.Println("Loaded leader", config.Leader)
 
 		switch msg.Status {
 		case "online":
@@ -44,7 +42,7 @@ func PlatformNodeListen() {
 
 			// If the the leader is the current node, update the time using postgresql clock to avoid time drift
 			// This part will not run if no leader is found
-			if dpconfig.Leader == nodeID {
+			if config.Leader == nodeID {
 				err2 = database.DBConn.Model(&models.PlatformLeader{}).Clauses(clause.OnConflict{
 					Columns:   []clause.Column{{Name: "leader"}},
 					DoUpdates: clause.AssignmentColumns([]string{"updated_at"}),

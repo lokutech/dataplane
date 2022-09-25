@@ -1,34 +1,32 @@
 package filesystem
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
 	"log"
 	"os"
 	"testing"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
 
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 /*
 Update pipeline folder test
-go test -count=1 -timeout 30s -v -run ^TestUpdateFolder$ github.com/dataplane-app/dataplane/mainapp/utilities
+go test -count=1 -timeout 30s -v -run ^TestUpdateFolder$ dataplane/mainapp/utilities
 */
 func TestUpdateFolder(t *testing.T) {
 
-	dpconfig.LoadConfig()
+	config.LoadConfig()
 	database.DBConnect()
 
 	parentFolder := "test/"
 
-	log.Println("Code directory", dpconfig.CodeDirectory)
+	log.Println("Code directory", config.CodeDirectory)
 
 	// Create parent folder if not exists
-	if _, err := os.Stat(dpconfig.CodeDirectory + parentFolder); os.IsNotExist(err) {
-		err := os.MkdirAll(dpconfig.CodeDirectory+parentFolder, os.ModePerm)
+	if _, err := os.Stat(config.CodeDirectory + parentFolder); os.IsNotExist(err) {
+		err := os.MkdirAll(config.CodeDirectory+parentFolder, os.ModePerm)
 		if err != nil {
 			t.Error("Make parent directory", err)
 		}
@@ -43,7 +41,7 @@ func TestUpdateFolder(t *testing.T) {
 		FolderName: "OLD" + FolderFriendly(fid),
 	}
 
-	oldfolder := dpconfig.CodeDirectory + parentFolder + id + "_" + OLDinput.FolderName
+	oldfolder := config.CodeDirectory + parentFolder + id + "_" + OLDinput.FolderName
 	log.Println("Old folder:", oldfolder)
 
 	if _, err := os.Stat(oldfolder); os.IsNotExist(err) {

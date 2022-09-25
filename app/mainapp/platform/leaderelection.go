@@ -1,12 +1,11 @@
 package platform
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/scheduler"
 	"log"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/scheduler"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -20,28 +19,28 @@ func LeaderElection() {
 		DoUpdates: clause.AssignmentColumns([]string{"updated_at"}),
 	}).Create(map[string]interface{}{
 		"leader":     true,
-		"node_id":    dpconfig.MainAppID,
+		"node_id":    config.MainAppID,
 		"updated_at": gorm.Expr("now() at time zone 'utc'"),
 	})
 	if err2.Error != nil {
 		log.Println(err2.Error.Error())
 	}
 
-	dpconfig.Leader = dpconfig.MainAppID
+	config.Leader = config.MainAppID
 
 	// Remove any schedules
 	scheduler.RemovePipelineSchedules()
 
 	// I am the leader, load schedules.
-	if dpconfig.Leader == dpconfig.MainAppID {
+	if config.Leader == config.MainAppID {
 
-		if dpconfig.Debug == "true" || dpconfig.SchedulerDebug == "true" {
-			log.Println("Leader election:", dpconfig.MainAppID, dpconfig.Leader == dpconfig.MainAppID)
+		if config.Debug == "true" || config.SchedulerDebug == "true" {
+			log.Println("Leader election:", config.MainAppID, config.Leader == config.MainAppID)
 		}
 
 		// Load the pipleine schedules
 		scheduler.LoadPipelineSchedules()
-		if dpconfig.Debug == "true" || dpconfig.SchedulerDebug == "true" {
+		if config.Debug == "true" || config.SchedulerDebug == "true" {
 			log.Println("Schedules loaded.")
 		}
 

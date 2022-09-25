@@ -1,7 +1,6 @@
 import { MenuItem } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useHistory } from 'react-router-dom';
-import { useClearFileCachePipeline } from '../../../graphql/clearFileCachePipeline';
 import { useGetPipelines } from '../../../graphql/getPipelines';
 import { useTurnOnOffPipeline } from '../../../graphql/turnOnOffPipeline';
 import { useGlobalFlowState } from '../../../pages/PipelineEdit';
@@ -19,7 +18,6 @@ const PipelineItemTable = (props) => {
     // Graphql hook
     const getPipelines = useGetPipelinesHook(setPipelines, environmentID);
     const turnOnOffPipeline = useTurnOnOffPipelineHook(id, environmentID, handleCloseMenu, getPipelines);
-    const clearFileCachePipeline = useClearFileCachePipelineHook(environmentID, id);
 
     const manageEdit = () => {
         FlowState.isEditorPage.get(true);
@@ -57,11 +55,6 @@ const PipelineItemTable = (props) => {
         handleCloseMenu();
     };
 
-    const clearCacheClick = () => {
-        clearFileCachePipeline();
-        handleCloseMenu();
-    };
-
     return (
         <>
             <MenuItem sx={{ color: 'cyan.main' }} onClick={manageEdit}>
@@ -69,9 +62,6 @@ const PipelineItemTable = (props) => {
             </MenuItem>
             <MenuItem sx={{ color: 'cyan.main' }} onClick={permissionClick}>
                 Permissions
-            </MenuItem>
-            <MenuItem sx={{ color: 'cyan.main' }} onClick={clearCacheClick}>
-                Clear file cache
             </MenuItem>
             <MenuItem sx={{ color: 'cyan.main' }} onClick={handleDuplicate}>
                 Duplicate
@@ -135,26 +125,6 @@ function useGetPipelinesHook(setPipelines, environmentID) {
             response.errors.map((err) => enqueueSnackbar(err.message, { variant: 'error' }));
         } else {
             setPipelines(response);
-        }
-    };
-}
-
-function useClearFileCachePipelineHook(environmentID, pipelineID) {
-    // GraphQL hook
-    const clearFileCachePipeline = useClearFileCachePipeline();
-
-    const { enqueueSnackbar } = useSnackbar();
-
-    // Clear file cache
-    return async () => {
-        const response = await clearFileCachePipeline({ environmentID, pipelineID });
-
-        if (response.r || response.error) {
-            enqueueSnackbar("Can't clear file cache: " + (response.msg || response.r || response.error), { variant: 'error' });
-        } else if (response.errors) {
-            response.errors.map((err) => enqueueSnackbar(err.message, { variant: 'error' }));
-        } else {
-            enqueueSnackbar('Success', { variant: 'success' });
         }
     };
 }

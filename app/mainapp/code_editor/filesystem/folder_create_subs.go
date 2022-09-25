@@ -1,12 +1,10 @@
 package filesystem
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database/models"
 	"log"
 	"os"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
 
 	"gorm.io/gorm"
 )
@@ -34,22 +32,22 @@ func CreateFolderSubs(db *gorm.DB, environmentID string) (string, error) {
 
 	for _, n := range folders {
 
-		createDirectory := dpconfig.CodeDirectory + parentFolder + n
+		createDirectory := config.CodeDirectory + parentFolder + n
 
 		if _, err := os.Stat(createDirectory); os.IsNotExist(err) {
 			// path/to/whatever does not exist
 			err := os.MkdirAll(createDirectory, os.ModePerm)
 			if err != nil {
-				if dpconfig.Debug == "true" {
+				if config.Debug == "true" {
 					log.Println("Create directory error:", err)
 				}
 			}
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				log.Println("Created sub directory: ", createDirectory)
 			}
 
 		} else {
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				log.Println("Directory already exists: ", createDirectory)
 			}
 		}

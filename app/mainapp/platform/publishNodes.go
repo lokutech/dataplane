@@ -1,16 +1,13 @@
 package platform
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/messageq"
+	"dataplane/mainapp/scheduler"
+	"dataplane/workers/logging"
 	"log"
-
-	"github.com/dataplane-app/dataplane/workers/logging"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/messageq"
-	"github.com/dataplane-app/dataplane/mainapp/scheduler"
 
 	"github.com/go-co-op/gocron"
 	"gorm.io/gorm"
@@ -20,7 +17,7 @@ func PlatformNodePublish(s *gocron.Scheduler, db *gorm.DB, mainAppID string) {
 
 	s.Every(500).Milliseconds().Do(func() {
 
-		// log.Println("Leader ID:", dpconfig.Leader)
+		// log.Println("Leader ID:", config.Leader)
 		// Is there a leader?
 		var leader models.PlatformLeader
 		err2 := database.DBConn.First(&leader)
@@ -29,15 +26,15 @@ func PlatformNodePublish(s *gocron.Scheduler, db *gorm.DB, mainAppID string) {
 		}
 
 		// if leader has changed
-		if dpconfig.Leader != leader.NodeID {
+		if config.Leader != leader.NodeID {
 
-			if dpconfig.SchedulerDebug == "true" {
-				log.Println("Publish: Changed leader: ", dpconfig.Leader, "->", leader.NodeID)
+			if config.SchedulerDebug == "true" {
+				log.Println("Publish: Changed leader: ", config.Leader, "->", leader.NodeID)
 			}
 
 			// Remove any schedules if there is a change in leader and this node is not the leader
-			if dpconfig.MainAppID != dpconfig.Leader {
-				if dpconfig.SchedulerDebug == "true" {
+			if config.MainAppID != config.Leader {
+				if config.SchedulerDebug == "true" {
 					log.Println("Not leader, removed any schedules.")
 				}
 				scheduler.RemovePipelineSchedules()
@@ -48,14 +45,14 @@ func PlatformNodePublish(s *gocron.Scheduler, db *gorm.DB, mainAppID string) {
 		if err2.Error == gorm.ErrRecordNotFound {
 			LeaderElection()
 		} else {
-			dpconfig.Leader = leader.NodeID
+			config.Leader = leader.NodeID
 		}
 
-		// log.Println("Publish leader: ", dpconfig.Leader)
+		// log.Println("Publish leader: ", config.Leader)
 
 		var data = models.PlatformNodeUpdate{
 			NodeID: mainAppID,
-			Leader: dpconfig.Leader,
+			Leader: config.Leader,
 			Status: "online",
 		}
 		err := messageq.MsgSend("mainapp-node-update", data)

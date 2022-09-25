@@ -1,18 +1,17 @@
 package pipelinetests
 
 import (
+	"dataplane/mainapp/Tests/testutils"
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/logging"
 	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"strings"
 	"testing"
-
-	"github.com/dataplane-app/dataplane/mainapp/Tests/testutils"
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
 
 	"github.com/bxcodec/faker/v3"
 	"github.com/golang-jwt/jwt/v4"
@@ -23,7 +22,7 @@ import (
 
 /*
 For individual tests - in separate window run: go run server.go
-go test -p 1 -v -count=1 -run TestSpecificPipelines github.com/dataplane-app/dataplane/mainapp/Tests/pipelines
+go test -p 1 -v -count=1 -run TestSpecificPipelines dataplane/mainapp/Tests/pipelines
 * Login
 * Create pipeline
 * My pipeline permissions
@@ -118,7 +117,7 @@ func TestSpecificPipelines(t *testing.T) {
 	err := database.DBConn.Where("name = ?", `test_`+pipelineId).Find(&p).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		log.Println(errors.New("Retrive pipelines database error."))
@@ -379,7 +378,7 @@ func TestSpecificPipelines(t *testing.T) {
 	err = database.DBConn.Where("access_group_id = ?", accessgroup).Delete(&ag).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		log.Println(errors.New("Retrive pipelines database error."))

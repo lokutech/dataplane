@@ -1,16 +1,14 @@
 package pipelines
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/logging"
+	"dataplane/mainapp/messageq"
+	"dataplane/mainapp/worker"
 	"encoding/json"
 	"time"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
-	"github.com/dataplane-app/dataplane/mainapp/messageq"
-	"github.com/dataplane-app/dataplane/mainapp/worker"
 
 	"gorm.io/gorm/clause"
 )
@@ -96,7 +94,7 @@ func RunNextPipeline() {
 					"status":     "Success",
 					"ended_at":   run.EndedAt})
 				if errnat != nil {
-					if dpconfig.Debug == "true" {
+					if config.Debug == "true" {
 						logging.PrintSecretsRedact(errnat)
 					}
 
@@ -176,12 +174,12 @@ func RunNextPipeline() {
 				err = worker.WorkerRunTask(s.WorkerGroup, s.TaskID, s.RunID, s.EnvironmentID, s.PipelineID, s.NodeID, commandsend, s.Folder, s.FolderID, s.Version, s.RunType)
 				// err = worker.WorkerRunTask("python_1", triggerData[s].TaskID, RunID, environmentID, pipelineID, s, []string{"echo " + s})
 				if err != nil {
-					if dpconfig.Debug == "true" {
+					if config.Debug == "true" {
 						logging.PrintSecretsRedact(err)
 					}
 
 				} else {
-					if dpconfig.Debug == "true" {
+					if config.Debug == "true" {
 						logging.PrintSecretsRedact("Next step:", s.RunID, " -> ", s.TaskID)
 					}
 				}
@@ -203,7 +201,7 @@ func RunNextPipeline() {
 	})
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 

@@ -5,15 +5,12 @@ package privateresolvers
 
 import (
 	"context"
+	"dataplane/mainapp/auth_permissions"
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/logging"
 	"errors"
-
-	permissions "github.com/dataplane-app/dataplane/mainapp/auth_permissions"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
 
 	"gorm.io/gorm"
 )
@@ -56,7 +53,7 @@ func (r *mutationResolver) UpdatePermissionToUser(ctx context.Context, environme
 	)
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return "", errors.New("Add permission to user database error.")
@@ -94,7 +91,7 @@ func (r *mutationResolver) DeletePermissionToUser(ctx context.Context, userID st
 		return "", errors.New("User to permission relationship not found.")
 	}
 	if err.Error != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return "", errors.New("Add access group database error.")
@@ -137,7 +134,7 @@ func (r *mutationResolver) DeleteSpecificPermission(ctx context.Context, subject
 		return "", errors.New("User to permission relationship not found.")
 	}
 	if err.Error != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return "", errors.New("Delete specific permission database error.")

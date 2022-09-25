@@ -1,13 +1,11 @@
 package scheduler
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/logging"
 	"log"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
 
 	"github.com/go-co-op/gocron"
 )
@@ -18,8 +16,8 @@ func LoadPipelineSchedules() {
 	RemovePipelineSchedules()
 
 	// ----------- Load the pipeline schedules -------------
-	// log.Printf("%+v\n", dpconfig.Scheduler)
-	// log.Println("Before loading:", dpconfig.Scheduler.Len())
+	// log.Printf("%+v\n", config.Scheduler)
+	// log.Println("Before loading:", config.Scheduler.Len())
 	var pipelineSchedules []models.Scheduler
 	err := database.DBConn.Where("online = true").Find(&pipelineSchedules).Error
 	if err != nil {
@@ -33,20 +31,20 @@ func LoadPipelineSchedules() {
 
 	}
 
-	if dpconfig.SchedulerDebug == "true" {
+	if config.SchedulerDebug == "true" {
 		var PipelineScheduler *gocron.Scheduler
-		for i, v := range dpconfig.PipelineScheduler.Keys() {
+		for i, v := range config.PipelineScheduler.Keys() {
 
-			if tmp, ok := dpconfig.PipelineScheduler.Get(v); ok {
+			if tmp, ok := config.PipelineScheduler.Get(v); ok {
 
 				PipelineScheduler = tmp.(*gocron.Scheduler)
 				log.Println("Scheduler:", i, v, PipelineScheduler.IsRunning(), PipelineScheduler.Len())
 			}
 		}
 
-		for i, v := range dpconfig.PipelineSchedulerJob.Keys() {
+		for i, v := range config.PipelineSchedulerJob.Keys() {
 
-			if tmp, ok := dpconfig.PipelineSchedulerJob.Get(v); ok {
+			if tmp, ok := config.PipelineSchedulerJob.Get(v); ok {
 
 				PSJ := tmp.(*gocron.Job)
 				log.Println("Scheduler Registered job:", i, v, PSJ.NextRun())

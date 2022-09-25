@@ -5,21 +5,18 @@ package privateresolvers
 
 import (
 	"context"
+	"dataplane/mainapp/auth_permissions"
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	privategraphql "dataplane/mainapp/graphql/private"
+	"dataplane/mainapp/logging"
+	"dataplane/mainapp/messageq"
+	"dataplane/mainapp/utilities"
 	"errors"
 	"log"
 	"regexp"
 	"strings"
-
-	permissions "github.com/dataplane-app/dataplane/mainapp/auth_permissions"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	privategraphql "github.com/dataplane-app/dataplane/mainapp/graphql/private"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
-	"github.com/dataplane-app/dataplane/mainapp/messageq"
-	"github.com/dataplane-app/dataplane/mainapp/utilities"
 
 	"gorm.io/gorm"
 )
@@ -50,7 +47,7 @@ func (r *mutationResolver) CreateSecret(ctx context.Context, input *privategraph
 	// Encrypt secret value
 	encryptedSecretValue, err := utilities.Encrypt(input.Value)
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Secret value encryption failed.")
@@ -69,7 +66,7 @@ func (r *mutationResolver) CreateSecret(ctx context.Context, input *privategraph
 	err = database.DBConn.Create(&secretData).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 
@@ -110,7 +107,7 @@ func (r *mutationResolver) UpdateSecret(ctx context.Context, input *privategraph
 	err := database.DBConn.Where("secret = ? and environment_id = ?", input.Secret, input.EnvironmentID).Select("description").Updates(&secretData).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Update secret database error.")
@@ -139,7 +136,7 @@ func (r *mutationResolver) UpdateSecretValue(ctx context.Context, secret string,
 	// Encrypt secret value
 	encryptedSecretValue, err := utilities.Encrypt(value)
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Secret value encryption failed.")
@@ -152,7 +149,7 @@ func (r *mutationResolver) UpdateSecretValue(ctx context.Context, secret string,
 	err = database.DBConn.Where("secret = ? and environment_id = ?", secret, environmentID).Updates(&secretData).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Update secret database error.")
@@ -189,7 +186,7 @@ func (r *mutationResolver) UpdateSecretValue(ctx context.Context, secret string,
 
 			errnat := messageq.MsgSend("updatesecrets."+x, "update")
 			if errnat != nil {
-				if dpconfig.Debug == "true" {
+				if config.Debug == "true" {
 					logging.PrintSecretsRedact(errnat)
 				}
 
@@ -225,7 +222,7 @@ func (r *mutationResolver) UpdateDeleteSecret(ctx context.Context, secret string
 	err := database.DBConn.Where(&models.Secrets{Secret: secret, EnvironmentID: environmentID}).Delete(&s).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Delete secret database error.")
@@ -256,7 +253,7 @@ func (r *queryResolver) GetSecret(ctx context.Context, secret string, environmen
 
 	err := database.DBConn.Where("secret = ? and environment_id =?", secret, environmentID).First(&s).Error
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Retrive secret database error.")
@@ -288,7 +285,7 @@ func (r *queryResolver) GetSecrets(ctx context.Context, environmentID string) ([
 
 	err := database.DBConn.Find(&s).Error
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Retrive secrets database error.")

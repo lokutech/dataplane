@@ -1,28 +1,26 @@
 package pipelines
 
 import (
+	"dataplane/mainapp/code_editor/filesystem"
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/logging"
+	"dataplane/mainapp/messageq"
+	"dataplane/mainapp/worker"
 	"encoding/json"
 	"log"
 	"os"
 	"time"
 
-	"github.com/dataplane-app/dataplane/mainapp/code_editor/filesystem"
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
-	"github.com/dataplane-app/dataplane/mainapp/messageq"
-	"github.com/dataplane-app/dataplane/mainapp/worker"
-
 	"github.com/google/uuid"
-	"gorm.io/datatypes"
 )
 
 type Command struct {
 	Command string `json:command`
 }
 
-func RunPipeline(pipelineID string, environmentID string, runID string, runJson ...datatypes.JSON) (models.PipelineRuns, error) {
+func RunPipeline(pipelineID string, environmentID string, runID string) (models.PipelineRuns, error) {
 
 	// start := time.Now().UTC()
 
@@ -36,34 +34,13 @@ func RunPipeline(pipelineID string, environmentID string, runID string, runJson 
 	err := database.DBConn.Where("pipeline_id = ? and environment_id =?", pipelineID, environmentID).First(&pipelinedata).Error
 	if err != nil {
 
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return models.PipelineRuns{}, err
 	}
 
 	// Retrieve folders
-
-	// Check if a runJson is submitted
-	if runJson != nil && len(runJson[0]) != 0 {
-		run := models.PipelineApiTriggerRuns{
-			RunID:         runID,
-			PipelineID:    pipelineID,
-			EnvironmentID: environmentID,
-			RunType:       "pipeline",
-			RunJSON:       runJson[0],
-			CreatedAt:     time.Now().UTC(),
-		}
-
-		err = database.DBConn.Create(&run).Error
-		if err != nil {
-
-			if dpconfig.Debug == "true" {
-				logging.PrintSecretsRedact(err)
-			}
-			return models.PipelineRuns{}, err
-		}
-	}
 
 	// Create a run
 	run := models.PipelineRuns{
@@ -79,7 +56,7 @@ func RunPipeline(pipelineID string, environmentID string, runID string, runJson 
 	err = database.DBConn.Create(&run).Error
 	if err != nil {
 
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return models.PipelineRuns{}, err
@@ -152,9 +129,9 @@ func RunPipeline(pipelineID string, environmentID string, runID string, runJson 
 
 			folderMap[f.NodeID] = dir
 			folderNodeMap[f.NodeID] = f.FolderID
-			if dpconfig.Debug == "true" {
-				if _, err := os.Stat(dpconfig.CodeDirectory + dir); os.IsExist(err) {
-					log.Println("Dir exists:", dpconfig.CodeDirectory+dir)
+			if config.Debug == "yes" {
+				if _, err := os.Stat(config.CodeDirectory + dir); os.IsExist(err) {
+					log.Println("Dir exists:", config.CodeDirectory+dir)
 
 				}
 			}
@@ -195,7 +172,7 @@ func RunPipeline(pipelineID string, environmentID string, runID string, runJson 
 
 			err = json.Unmarshal(s.Destination, &trigger)
 			if err != nil {
-				if dpconfig.Debug == "true" {
+				if config.Debug == "true" {
 					logging.PrintSecretsRedact(err)
 				}
 			}
@@ -240,7 +217,7 @@ func RunPipeline(pipelineID string, environmentID string, runID string, runJson 
 
 		errnat := messageq.MsgSend("taskupdate."+environmentID+"."+RunID, addTask)
 		if errnat != nil {
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				log.Println(errnat)
 			}
 
@@ -254,14 +231,14 @@ func RunPipeline(pipelineID string, environmentID string, runID string, runJson 
 
 	err = database.DBConn.Create(&course).Error
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return models.PipelineRuns{}, err
 	}
 
 	// --- Run the first set of tasks
-	if dpconfig.Debug == "true" {
+	if config.Debug == "true" {
 		log.Println("trigger: ", trigger, triggerID)
 	}
 
@@ -270,7 +247,7 @@ func RunPipeline(pipelineID string, environmentID string, runID string, runJson 
 	// send message that trigger node has run - for websockets
 	errnat := messageq.MsgSend("taskupdate."+environmentID+"."+RunID, startTask)
 	if errnat != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(errnat)
 		}
 
@@ -297,12 +274,12 @@ func RunPipeline(pipelineID string, environmentID string, runID string, runJson 
 		// err = worker.WorkerRunTask("python_1", triggerData[s].TaskID, RunID, environmentID, pipelineID, s, []string{"sleep " + strconv.Itoa(x) + "; echo " + s})
 		err = worker.WorkerRunTask(triggerData[s].WorkerGroup, triggerData[s].TaskID, RunID, environmentID, pipelineID, s, commandsend, folderMap[triggerData[s].NodeID], folderNodeMap[triggerData[s].NodeID], "", "pipeline")
 		if err != nil {
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				logging.PrintSecretsRedact(err)
 			}
 			return run, err
 		} else {
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				logging.PrintSecretsRedact(triggerData[s].TaskID)
 			}
 		}

@@ -1,11 +1,10 @@
 package messageq
 
 import (
+	"dataplane/mainapp/logging"
 	"log"
 	"os"
 	"time"
-
-	"github.com/dataplane-app/dataplane/mainapp/logging"
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/encoders/protobuf"
@@ -51,5 +50,5 @@ func NATSConnect() {
 	}
 
 	log.Println("📧 NATS connected")
-	//DBConn.dpconfig.PrepareStmt = true
+	//DBConn.Config.PrepareStmt = true
 }

@@ -5,17 +5,14 @@ package privateresolvers
 
 import (
 	"context"
+	permissions "dataplane/mainapp/auth_permissions"
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	privategraphql "dataplane/mainapp/graphql/private"
+	"dataplane/mainapp/logging"
+	"dataplane/mainapp/messageq"
 	"errors"
-
-	permissions "github.com/dataplane-app/dataplane/mainapp/auth_permissions"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	privategraphql "github.com/dataplane-app/dataplane/mainapp/graphql/private"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
-	"github.com/dataplane-app/dataplane/mainapp/messageq"
 
 	"gorm.io/gorm"
 )
@@ -47,7 +44,7 @@ func (r *mutationResolver) AddSecretToWorkerGroup(ctx context.Context, environme
 	err := database.DBConn.Create(&workerSecret).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 
@@ -57,7 +54,7 @@ func (r *mutationResolver) AddSecretToWorkerGroup(ctx context.Context, environme
 	// ---- update workers
 	errnat := messageq.MsgSend("updatesecrets."+workerGroup, "update")
 	if errnat != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(errnat)
 		}
 
@@ -90,7 +87,7 @@ func (r *mutationResolver) DeleteSecretFromWorkerGroup(ctx context.Context, envi
 		Delete(&workerSecret).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 
@@ -100,7 +97,7 @@ func (r *mutationResolver) DeleteSecretFromWorkerGroup(ctx context.Context, envi
 	// ---- update workers
 	errnat := messageq.MsgSend("updatesecrets."+workerGroup, "update")
 	if errnat != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(errnat)
 		}
 
@@ -217,7 +214,7 @@ func (r *queryResolver) GetSecretGroups(ctx context.Context, environmentID strin
 
 	err := database.DBConn.Where("secret_id = ? and environment_id =?", secret, environmentID).Find(&s).Error
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Retrive users database error.")
@@ -263,7 +260,7 @@ func (r *queryResolver) GetWorkerGroupSecrets(ctx context.Context, environmentID
 		`, workerGroup, environmentID).Scan(&s).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Retrive users database error.")

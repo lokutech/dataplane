@@ -64,7 +64,6 @@ const DeploymentsTable = ({ data, filter, setPipelineCount, environmentID, setDe
                                 setIsOpenDeletePipeline={setIsOpenDeletePipeline}
                                 setDeployments={setDeployments}
                                 deploy_active={row.value[6]}
-                                version={row.value[5]}
                             />
                         </MoreInfoMenu>
                     </Grid>

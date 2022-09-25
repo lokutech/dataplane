@@ -1,7 +1,7 @@
 package utilities
 
 import (
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
+	"dataplane/mainapp/database/models"
 
 	cmap "github.com/orcaman/concurrent-map"
 )

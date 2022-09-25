@@ -8,7 +8,6 @@ import { RunningSpinner } from './RunningSpinner';
 import useWebSocketLog, { formatDate } from './useWebSocketLog';
 import { useGlobalEditorState } from '../../../pages/Editor';
 import { useTheme } from '@mui/system';
-import { useGlobalMeState } from '../../Navbar';
 
 const LogsColumn = forwardRef(({ children, ...rest }, ref) => {
     const pipeline = rest.pipeline;
@@ -19,9 +18,8 @@ const LogsColumn = forwardRef(({ children, ...rest }, ref) => {
     const [keys, setKeys] = useState([]);
     const [render, setRender] = useState(0);
 
-    // Global states
+    // Global editor state
     const EditorGlobal = useGlobalEditorState();
-    const MeData = useGlobalMeState();
 
     // Instantiate websocket
     const webSocket = useWebSocketLog(pipeline.environmentID, EditorGlobal.runID.get(), setKeys, setGraphQlResp, keys, pipeline);
@@ -42,7 +40,7 @@ const LogsColumn = forwardRef(({ children, ...rest }, ref) => {
         let text = '';
         graphQlResp.forEach((log) => {
             if (!keys.includes(log.uid)) {
-                text += log.log === 'Run' || log.log === 'Success' || log.log === 'Fail' ? `\n${formatDate(log.created_at, MeData.timezone.get())} ${log.log}` : `\n${log.log}`;
+                text += `\n${formatDate(log.created_at)} ${log.log}`;
             }
         });
         text = text.replace(/\n/, '');

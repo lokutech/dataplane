@@ -1,12 +1,11 @@
 package filesystem
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
 	"log"
 	"os"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
 )
 
 func UpdateFolder(id string, OLDinput models.CodeFolders, Newinput models.CodeFolders, parentFolder string) (Newoutput models.CodeFolders, updateOLDDirectory string, updateNewDirectory string) {
@@ -46,13 +45,12 @@ func UpdateFolder(id string, OLDinput models.CodeFolders, Newinput models.CodeFo
 	}
 
 	// Updare the directory
-	updateOLDDirectory = dpconfig.CodeDirectory + OLDDirectory
-	updateNewDirectory = dpconfig.CodeDirectory + NewDirectory
+	updateOLDDirectory = config.CodeDirectory + OLDDirectory
+	updateNewDirectory = config.CodeDirectory + NewDirectory
 
-	// if dpconfig.FSCodeFileStorage == "LocalFile" {
 	if _, err := os.Stat(updateOLDDirectory); os.IsNotExist(err) {
 		// path/to/whatever does not exist
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			log.Println("Update directory doesn't exist: ", updateOLDDirectory)
 		}
 		return models.CodeFolders{}, "", ""
@@ -62,11 +60,10 @@ func UpdateFolder(id string, OLDinput models.CodeFolders, Newinput models.CodeFo
 		if err != nil {
 			log.Println("Rename pipeline dir err:", err)
 		}
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			log.Println("Directory change: ", updateOLDDirectory, "->", updateNewDirectory)
 		}
 	}
-	// }
 
 	return Newinput, updateOLDDirectory, updateNewDirectory
 

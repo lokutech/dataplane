@@ -1,15 +1,13 @@
 package runtask
 
 import (
+	"dataplane/mainapp/database/models"
+	modelmain "dataplane/mainapp/database/models"
+	"dataplane/workers/config"
+	"dataplane/workers/database"
+	"dataplane/workers/messageq"
 	"log"
 	"time"
-
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	modelmain "github.com/dataplane-app/dataplane/mainapp/database/models"
-
-	wrkerconfig "github.com/dataplane-app/dataplane/workers/config"
-	"github.com/dataplane-app/dataplane/workers/database"
-	"github.com/dataplane-app/dataplane/workers/messageq"
 
 	"gorm.io/gorm/clause"
 )
@@ -56,7 +54,7 @@ func UpdateWorkerTasks(msg modelmain.WorkerTasks) {
 
 	errnat := messageq.MsgSend("taskupdate."+msg.EnvironmentID+"."+msg.RunID, msg)
 	if errnat != nil {
-		if wrkerconfig.Debug == "true" {
+		if config.Debug == "true" {
 			log.Println(errnat)
 		}
 

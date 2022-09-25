@@ -1,13 +1,12 @@
 package database
 
 import (
+	"dataplane/workers/config"
 	"fmt"
 	"log"
 	"os"
 	"strconv"
 	"time"
-
-	wrkerconfig "github.com/dataplane-app/dataplane/workers/config"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -21,13 +20,13 @@ func DBConnect() {
 	var err error
 	DBConn, err = DB()
 	if err != nil {
-		if wrkerconfig.Debug == "true" {
+		if config.Debug == "true" {
 			log.Println(err.Error())
 		}
 
 		log.Fatal("Failed to connect to database")
 	}
-	//DBConn.wrkerconfig.PrepareStmt = true
+	//DBConn.Config.PrepareStmt = true
 }
 
 func DB() (*gorm.DB, error) {

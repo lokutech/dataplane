@@ -5,18 +5,16 @@ package publicresolvers
 
 import (
 	"context"
+	"dataplane/mainapp/auth"
+	permissions "dataplane/mainapp/auth_permissions"
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	publicgraphql "dataplane/mainapp/graphql/public"
+	"dataplane/mainapp/logging"
 	"errors"
 	"os"
 	"strings"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/auth"
-	permissions "github.com/dataplane-app/dataplane/mainapp/auth_permissions"
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	publicgraphql "github.com/dataplane-app/dataplane/mainapp/graphql/public"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
 
 	validator "github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
@@ -75,7 +73,7 @@ func (r *mutationResolver) SetupPlatform(ctx context.Context, input *publicgraph
 	err = database.DBConn.Updates(&platformData).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		if strings.Contains(err.Error(), "duplicate key") {
@@ -88,7 +86,7 @@ func (r *mutationResolver) SetupPlatform(ctx context.Context, input *publicgraph
 	err = database.DBConn.Create(&userData).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		if strings.Contains(err.Error(), "duplicate key") {
@@ -122,7 +120,7 @@ func (r *mutationResolver) SetupPlatform(ctx context.Context, input *publicgraph
 	err = database.DBConn.Create(&preferences).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Register database error.")

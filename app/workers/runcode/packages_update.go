@@ -2,18 +2,16 @@ package runcodeworker
 
 import (
 	"bufio"
+	"dataplane/mainapp/database/models"
+	modelmain "dataplane/mainapp/database/models"
+	"dataplane/workers/config"
+	"dataplane/workers/database"
+	"dataplane/workers/messageq"
 	"log"
 	"os"
 	"os/exec"
 	"syscall"
 	"time"
-
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	modelmain "github.com/dataplane-app/dataplane/mainapp/database/models"
-
-	wrkerconfig "github.com/dataplane-app/dataplane/workers/config"
-	"github.com/dataplane-app/dataplane/workers/database"
-	"github.com/dataplane-app/dataplane/workers/messageq"
 
 	"github.com/google/uuid"
 	clog "github.com/pieterclaerhout/go-log"
@@ -62,7 +60,7 @@ func CodeUpdatePackage(language string, envfolder string, environmentID string, 
 			// Read line by line and process it
 			for scanner.Scan() {
 				uid := uuid.NewString()
-				line := wrkerconfig.Secrets.Replace(scanner.Text())
+				line := config.Secrets.Replace(scanner.Text())
 
 				sendmsg := modelmain.LogsSend{
 					CreatedAt: time.Now().UTC(),
@@ -72,7 +70,7 @@ func CodeUpdatePackage(language string, envfolder string, environmentID string, 
 				}
 
 				messageq.MsgSend("codepackage."+environmentID+"."+workerGroup, sendmsg)
-				if wrkerconfig.Debug == "true" {
+				if config.Debug == "true" {
 					clog.Info(line)
 				}
 			}
@@ -98,7 +96,7 @@ func CodeUpdatePackage(language string, envfolder string, environmentID string, 
 			// Read line by line and process it
 			for scannerErr.Scan() {
 				uid := uuid.NewString()
-				line := wrkerconfig.Secrets.Replace(scannerErr.Text())
+				line := config.Secrets.Replace(scannerErr.Text())
 
 				sendmsg := modelmain.LogsSend{
 					CreatedAt: time.Now().UTC(),
@@ -108,7 +106,7 @@ func CodeUpdatePackage(language string, envfolder string, environmentID string, 
 				}
 
 				messageq.MsgSend("codepackage."+environmentID+"."+workerGroup, sendmsg)
-				if wrkerconfig.Debug == "true" {
+				if config.Debug == "true" {
 					clog.Error(line)
 				}
 			}
@@ -122,7 +120,7 @@ func CodeUpdatePackage(language string, envfolder string, environmentID string, 
 		if err != nil {
 
 			uid := uuid.NewString()
-			line := wrkerconfig.Secrets.Replace(err.Error())
+			line := config.Secrets.Replace(err.Error())
 
 			sendmsg := modelmain.LogsSend{
 				CreatedAt: time.Now().UTC(),
@@ -132,7 +130,7 @@ func CodeUpdatePackage(language string, envfolder string, environmentID string, 
 			}
 
 			messageq.MsgSend("codepackage."+environmentID+"."+workerGroup, sendmsg)
-			if wrkerconfig.Debug == "true" {
+			if config.Debug == "true" {
 				clog.Error(line)
 			}
 

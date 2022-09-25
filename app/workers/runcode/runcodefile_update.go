@@ -1,16 +1,13 @@
 package runcodeworker
 
 import (
-	"fmt"
+	"dataplane/mainapp/database/models"
+	modelmain "dataplane/mainapp/database/models"
+	"dataplane/workers/config"
+	"dataplane/workers/database"
+	"dataplane/workers/messageq"
 	"log"
 	"time"
-
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	modelmain "github.com/dataplane-app/dataplane/mainapp/database/models"
-
-	wrkerconfig "github.com/dataplane-app/dataplane/workers/config"
-	"github.com/dataplane-app/dataplane/workers/database"
-	"github.com/dataplane-app/dataplane/workers/messageq"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm/clause"
@@ -58,27 +55,10 @@ func UpdateRunCodeFile(msg modelmain.CodeRun) {
 
 	errnat := messageq.MsgSend("coderunupdate."+msg.EnvironmentID+"."+msg.RunID, msg)
 	if errnat != nil {
-		if wrkerconfig.Debug == "true" {
+		if config.Debug == "true" {
 			log.Println(errnat)
 		}
 
-	}
-
-	/*
-		Send back complete action
-		stop.Sub(start)
-	*/
-	runtime := time.Now().UTC().Sub(msg.CreatedAt)
-
-	if msg.Status == "Fail" || msg.Status == "Success" {
-		sendmsg := modelmain.LogsSend{
-			CreatedAt: time.Now().UTC(),
-			UID:       uuid.NewString(),
-			Log:       fmt.Sprintf("Run time: %v", runtime),
-			LogType:   "action",
-		}
-
-		messageq.MsgSend("coderunfilelogs."+msg.RunID, sendmsg)
 	}
 
 	sendmsg := modelmain.LogsSend{

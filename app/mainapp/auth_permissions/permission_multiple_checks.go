@@ -1,7 +1,7 @@
 package permissions
 
 import (
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
+	"dataplane/mainapp/database/models"
 )
 
 func MultiplePermissionChecks(
@@ -34,7 +34,7 @@ func MultiplePermissionChecks(
 	for i, _ := range outcomes {
 		outcomes[i] = <-c
 		// fmt.Println("key: ", i, " - ", outcomes[i])
-		// if dpconfig.Debug == "true" {
+		// if config.Debug == "true" {
 		// 	logging.PrintSecretsRedact("Perms: ", outcomes[i].Perm.Subject, outcomes[i].Result)
 		// }
 

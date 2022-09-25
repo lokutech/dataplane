@@ -1,14 +1,13 @@
 package auth
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/logme"
 	"fmt"
 	"os"
 	"time"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/logme"
 
 	"github.com/golang-jwt/jwt/v4"
 	uuid2 "github.com/google/uuid"
@@ -55,7 +54,7 @@ func GenerateAccessClaims(userID string, username string, usertype string) strin
 		AuthenticationType: "PASSWORD",
 		PreferredUsername:  username,
 		UserType:           usertype, //admin or user
-		PlatformID:         dpconfig.PlatformID,
+		PlatformID:         config.PlatformID,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)

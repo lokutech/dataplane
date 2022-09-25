@@ -1,12 +1,10 @@
 package filesystem
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
 	"log"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
 )
 
 type FolderNodeUpdate struct {
@@ -82,10 +80,10 @@ func FolderNodeAddUpdate(pipelineID string, environmentID string, subfolder stri
 				switch n.NodeTypeDesc {
 				// Python processor
 				case "python":
-					// log.Println("Node types:", n.NodeType, n.NodeTypeDesc, dpconfig.CodeDirectory+rfolder)
+					// log.Println("Node types:", n.NodeType, n.NodeTypeDesc, config.CodeDirectory+rfolder)
 					path, err := FileCreateProcessor(n.NodeTypeDesc, rfolder+"/", cfolder.FolderID, node)
 					if err != nil {
-						if dpconfig.Debug == "true" {
+						if config.Debug == "true" {
 							log.Println("Failed to create python processor file: ", err, path)
 						}
 					}
@@ -123,7 +121,7 @@ func FolderNodeAddUpdate(pipelineID string, environmentID string, subfolder stri
 
 			} else {
 				n.Action = "nochange"
-				if dpconfig.Debug == "true" {
+				if config.Debug == "true" {
 					log.Println("No change node directory: ", n.FolderID, n.NodeID)
 				}
 

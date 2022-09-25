@@ -2,18 +2,17 @@ package filesystem
 
 import (
 	"archive/zip"
+	"dataplane/mainapp/config"
 	"io"
 	"os"
 	"path/filepath"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
 )
 
 // Source https://gosamples.dev/zip-file/
 func ZipSource(source, target string) error {
 
 	// Create trash directory if it doesn't exist
-	newpath := filepath.Join(dpconfig.CodeDirectory, "trash")
+	newpath := filepath.Join(config.CodeDirectory, "trash")
 	err := os.MkdirAll(newpath, os.ModePerm)
 	if err != nil {
 		return err

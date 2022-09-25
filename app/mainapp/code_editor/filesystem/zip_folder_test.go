@@ -1,27 +1,26 @@
 package filesystem
 
 import (
+	"dataplane/mainapp/config"
 	"fmt"
 	"log"
 	"os"
 	"testing"
 	"time"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
 )
 
 /*
 Run Super secret squirrel function test
-go test -count=1 -timeout 30s -v -run ^TestZIPFolder$ github.com/dataplane-app/dataplane/mainapp/filesystem
+go test -count=1 -timeout 30s -v -run ^TestZIPFolder$ dataplane/mainapp/filesystem
 */
 func TestZIPFolder(t *testing.T) {
 
 	// database.DBConnect()
-	dpconfig.LoadConfig()
+	config.LoadConfig()
 
-	createDirectory := dpconfig.CodeDirectory + "/test/zipfolder/"
+	createDirectory := config.CodeDirectory + "/test/zipfolder/"
 
-	zipDirectory := dpconfig.CodeDirectory + "/test/trash/"
+	zipDirectory := config.CodeDirectory + "/test/trash/"
 
 	zipfile := zipDirectory + "ziptest.zip"
 

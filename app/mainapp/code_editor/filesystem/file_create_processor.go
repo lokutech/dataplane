@@ -1,11 +1,10 @@
 package filesystem
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database/models"
 	"errors"
 	"log"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
 )
 
 /* Processor file will be overwritten */
@@ -31,28 +30,6 @@ print("Node id: ` + node.NodeID + `")`
 		}
 
 		// Folder excludes code directory
-
-		_, filepath, err = CreateFile(input, Folder, []byte(content))
-		if err != nil {
-			return "", err
-		}
-
-		content = `### Document my pipeline
-Add notes here to document this pipeline step.`
-
-		input = models.CodeFiles{
-			EnvironmentID: node.EnvironmentID,
-			NodeID:        node.NodeID,
-			PipelineID:    node.PipelineID,
-			FileName:      "document.md",
-			Active:        true,
-			Level:         "node_file",
-			FType:         "file",
-			FolderID:      FolderID,
-		}
-
-		// Folder excludes code directory
-
 		_, filepath, err = CreateFile(input, Folder, []byte(content))
 		if err != nil {
 			return "", err
@@ -62,7 +39,7 @@ Add notes here to document this pipeline step.`
 		return "", errors.New("Node type not found")
 	}
 
-	if dpconfig.Debug == "true" {
+	if config.Debug == "true" {
 		log.Println("Processor file created:", filepath)
 	}
 

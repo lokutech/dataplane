@@ -1,13 +1,11 @@
 package utilities
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database/models"
 	"fmt"
 	"log"
 	"strings"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
 )
 
 func GraphCycleCheck(edges []*models.PipelineEdges, node string) bool {
@@ -25,7 +23,7 @@ func GraphCycleCheck(edges []*models.PipelineEdges, node string) bool {
 	// Topologically sort nodes.
 	_, err := graph.TopSort(node)
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			log.Println(err)
 		}
 		return true

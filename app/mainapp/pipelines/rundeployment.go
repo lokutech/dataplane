@@ -1,19 +1,17 @@
 package pipelines
 
 import (
+	"dataplane/mainapp/code_editor/filesystem"
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/logging"
+	"dataplane/mainapp/messageq"
+	"dataplane/mainapp/worker"
 	"encoding/json"
 	"log"
 	"os"
 	"time"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/code_editor/filesystem"
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
-	"github.com/dataplane-app/dataplane/mainapp/messageq"
-	"github.com/dataplane-app/dataplane/mainapp/worker"
 
 	"github.com/google/uuid"
 )
@@ -32,13 +30,13 @@ func RunDeployment(pipelineID string, environmentID string, runID string) (model
 	err := database.DBConn.Where("pipeline_id = ? and environment_id =? and deploy_active=?", pipelineID, environmentID, true).First(&pipelinedata).Error
 	if err != nil {
 
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact("Find deployment", err)
 		}
 		return models.PipelineRuns{}, err
 	}
 
-	if dpconfig.Debug == "true" {
+	if config.Debug == "true" {
 		logging.PrintSecretsRedact("Deployment run version:", pipelinedata.Version)
 	}
 
@@ -59,7 +57,7 @@ func RunDeployment(pipelineID string, environmentID string, runID string) (model
 	err = database.DBConn.Create(&run).Error
 	if err != nil {
 
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return models.PipelineRuns{}, err
@@ -136,9 +134,9 @@ func RunDeployment(pipelineID string, environmentID string, runID string) (model
 
 			folderMap[f.NodeID] = dir
 			folderNodeMap[f.NodeID] = f.FolderID
-			if dpconfig.Debug == "true" {
-				if _, err := os.Stat(dpconfig.CodeDirectory + dir); os.IsExist(err) {
-					log.Println("Dir exists:", dpconfig.CodeDirectory+dir)
+			if config.Debug == "yes" {
+				if _, err := os.Stat(config.CodeDirectory + dir); os.IsExist(err) {
+					log.Println("Dir exists:", config.CodeDirectory+dir)
 
 				}
 			}
@@ -179,7 +177,7 @@ func RunDeployment(pipelineID string, environmentID string, runID string) (model
 
 			err = json.Unmarshal(s.Destination, &trigger)
 			if err != nil {
-				if dpconfig.Debug == "true" {
+				if config.Debug == "true" {
 					logging.PrintSecretsRedact(err)
 				}
 			}
@@ -225,7 +223,7 @@ func RunDeployment(pipelineID string, environmentID string, runID string) (model
 
 		errnat := messageq.MsgSend("taskupdate."+environmentID+"."+RunID, addTask)
 		if errnat != nil {
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				log.Println(errnat)
 			}
 
@@ -239,14 +237,14 @@ func RunDeployment(pipelineID string, environmentID string, runID string) (model
 
 	err = database.DBConn.Create(&course).Error
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return models.PipelineRuns{}, err
 	}
 
 	// --- Run the first set of tasks
-	if dpconfig.Debug == "true" {
+	if config.Debug == "true" {
 		log.Println("trigger: ", trigger, triggerID)
 	}
 
@@ -255,7 +253,7 @@ func RunDeployment(pipelineID string, environmentID string, runID string) (model
 	// send message that trigger node has run - for websockets
 	errnat := messageq.MsgSend("taskupdate."+environmentID+"."+RunID, startTask)
 	if errnat != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(errnat)
 		}
 
@@ -282,12 +280,12 @@ func RunDeployment(pipelineID string, environmentID string, runID string) (model
 
 		err = worker.WorkerRunTask(triggerData[s].WorkerGroup, triggerData[s].TaskID, RunID, environmentID, pipelineID, s, commandsend, folderMap[triggerData[s].NodeID], folderNodeMap[triggerData[s].NodeID], triggerData[s].Version, "deployment")
 		if err != nil {
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				logging.PrintSecretsRedact(err)
 			}
 			return run, err
 		} else {
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				logging.PrintSecretsRedact(triggerData[s].TaskID)
 			}
 		}

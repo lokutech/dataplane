@@ -1,13 +1,11 @@
 package runtask
 
 import (
+	modelmain "dataplane/mainapp/database/models"
+	"dataplane/workers/messageq"
 	"log"
 	"syscall"
 	"time"
-
-	modelmain "github.com/dataplane-app/dataplane/mainapp/database/models"
-
-	"github.com/dataplane-app/dataplane/workers/messageq"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -35,7 +33,7 @@ func Canceltask() fiber.Handler {
 			EndDT:  time.Now().UTC(),
 			Status: "Fail",
 		}
-		var response modelmain.TaskResponse
+		var response TaskResponse
 		_, errnats := messageq.MsgReply("taskupdate", TaskUpdate, &response)
 
 		if errnats != nil {

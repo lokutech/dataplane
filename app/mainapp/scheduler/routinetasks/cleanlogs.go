@@ -1,11 +1,10 @@
 package routinetasks
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database/models"
 	"log"
 	"strconv"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
 
 	"github.com/go-co-op/gocron"
 	"gorm.io/gorm"
@@ -15,8 +14,8 @@ func CleanWorkerLogs(s *gocron.Scheduler, db *gorm.DB) {
 
 	s.Every(1).Days().At("02:00").Do(func() {
 
-		result := db.Where("created_at < NOW() - INTERVAL '? days'", dpconfig.CleanLogs).Delete(&models.LogsWorkers{})
-		if dpconfig.Debug == "true" {
+		result := db.Where("created_at < NOW() - INTERVAL '? days'", config.CleanLogs).Delete(&models.LogsWorkers{})
+		if config.Debug == "true" {
 			log.Println("Removed old worker logs")
 		}
 

@@ -1,13 +1,12 @@
 package tests
 
 import (
+	"dataplane/workers/config"
+	"dataplane/workers/database"
+	"dataplane/workers/secrets"
 	"log"
 	"os"
 	"testing"
-
-	wrkerconfig "github.com/dataplane-app/dataplane/workers/config"
-	"github.com/dataplane-app/dataplane/workers/database"
-	"github.com/dataplane-app/dataplane/workers/secrets"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -28,7 +27,7 @@ func TestSecretsRedactFunction(t *testing.T) {
 	// load up the secrets
 	secrets.MapSecrets()
 
-	redacted := wrkerconfig.Secrets.Replace(logmessage)
+	redacted := config.Secrets.Replace(logmessage)
 
 	log.Println("Test removal: ", redacted)
 

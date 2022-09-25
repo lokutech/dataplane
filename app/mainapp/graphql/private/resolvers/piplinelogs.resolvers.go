@@ -5,15 +5,12 @@ package privateresolvers
 
 import (
 	"context"
+	permissions "dataplane/mainapp/auth_permissions"
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/logging"
 	"errors"
-
-	permissions "github.com/dataplane-app/dataplane/mainapp/auth_permissions"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
 )
 
 func (r *queryResolver) GetNodeLogs(ctx context.Context, runID string, pipelineID string, nodeID string, environmentID string) ([]*models.LogsWorkers, error) {
@@ -39,7 +36,7 @@ func (r *queryResolver) GetNodeLogs(ctx context.Context, runID string, pipelineI
 	err := database.DBConn.Select("created_at", "log", "uid", "log_type").Order("created_at asc").Where("environment_id = ? and run_id=? and node_id=?", environmentID, runID, nodeID).Find(&p).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Retrive logs database error.")
@@ -70,7 +67,7 @@ func (r *queryResolver) GetCodeFileRunLogs(ctx context.Context, runID string, pi
 	err := database.DBConn.Select("created_at", "log", "uid", "log_type").Order("created_at asc").Where("environment_id = ? and run_id=?", environmentID, runID).Find(&p).Error
 
 	if err != nil {
-		if dpconfig.Debug == "true" {
+		if config.Debug == "true" {
 			logging.PrintSecretsRedact(err)
 		}
 		return nil, errors.New("Retrive logs database error.")

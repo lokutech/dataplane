@@ -1,20 +1,20 @@
 package runcode
 
 import (
+	"dataplane/mainapp/code_editor/filesystem"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/logging"
+	"dataplane/mainapp/messageq"
+	"dataplane/mainapp/utilities"
+	"dataplane/workers/config"
+	"dataplane/workers/runtask"
 	"encoding/json"
 	"errors"
 	"log"
 	"os"
 	"strconv"
 	"time"
-
-	"github.com/dataplane-app/dataplane/mainapp/code_editor/filesystem"
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
-	"github.com/dataplane-app/dataplane/mainapp/messageq"
-	"github.com/dataplane-app/dataplane/mainapp/utilities"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -53,12 +53,11 @@ func RunCodeFile(workerGroup string, fileID string, envID string, pipelineID str
 	var folderMap string
 	var folderIDMap string
 
-	/* Folder that is at node level */
 	folderMap = parentfolderdata
 	folderIDMap = filesdata.FolderID
-	if dpconfig.Debug == "true" {
-		if _, err := os.Stat(dpconfig.CodeDirectory + folderMap); os.IsExist(err) {
-			log.Println("Dir exists:", dpconfig.CodeDirectory+folderMap)
+	if config.Debug == "yes" {
+		if _, err := os.Stat(config.CodeDirectory + folderMap); os.IsExist(err) {
+			log.Println("Dir exists:", config.CodeDirectory+folderMap)
 
 		}
 	}
@@ -123,11 +122,11 @@ func RunCodeFile(workerGroup string, fileID string, envID string, pipelineID str
 			var loadbalanceNext string
 
 			// if a worker group goes offline in between, choose the next in the load balancer and retry
-			if dpconfig.Debug == "true" {
+
+			if config.Debug == "true" {
 				log.Println("Worker LB:", onlineWorkers[0].LB, onlineWorkers)
 			}
 
-			// ---- Select which worker to send the request -----
 			switch onlineWorkers[0].LB {
 			case "roundrobin":
 				loadbalanceNext = utilities.Balance(onlineWorkers, workerGroup)
@@ -138,7 +137,7 @@ func RunCodeFile(workerGroup string, fileID string, envID string, pipelineID str
 			}
 
 			// Send the request to the worker
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				log.Println("Selected worker:", onlineWorkers[0].LB, loadbalanceNext)
 			}
 
@@ -171,15 +170,7 @@ func RunCodeFile(workerGroup string, fileID string, envID string, pipelineID str
 				logging.PrintSecretsRedact(err2.Error.Error())
 			}
 
-			var response models.TaskResponse
-
-			// ----- Are the files downloaded from distributed storage -----
-			/*
-				Instruct selected worker to download files
-				If there is a retry, this should be part of that retry
-				NOTE: This was moved to where the code is executed, it is hard to time the timeout for request / reply
-				It needs to run before the code is run. In addition, there is no need for two requests.
-			*/
+			var response runtask.TaskResponse
 
 			// log.Println("Task channel: ", "task."+workerGroup+"."+loadbalanceNext)
 			channel := "runcodefile." + workerGroup + "." + loadbalanceNext
@@ -197,16 +188,13 @@ func RunCodeFile(workerGroup string, fileID string, envID string, pipelineID str
 			}
 
 			if response.R != "ok" {
-				if dpconfig.Debug == "true" {
-					log.Println("Failed worker send but got response: ", response)
-				}
 				markFail = true
 				break
 			}
 			// } else {
 			// 	log.Println(loadbalanceNext + " not online, retrying in 2 seconds (" + strconv.Itoa(i) + " of " + strconv.Itoa(maxRetiresAllowed) + ")")
 			// }
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				log.Println("Send to worker", response.R, response.M)
 			}
 		}
@@ -229,7 +217,7 @@ func RunCodeFile(workerGroup string, fileID string, envID string, pipelineID str
 		}
 
 		UpdateCodeRun(TaskFinal)
-		response := models.TaskResponse{R: "ok"}
+		response := runtask.TaskResponse{R: "ok"}
 		_, errnats := messageq.MsgReply("coderunupdate", TaskFinal, &response)
 		if errnats != nil {
 			logging.PrintSecretsRedact(errnats)

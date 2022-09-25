@@ -5,8 +5,6 @@ import { useGetCodeFileRunLogs } from '../../../graphql/getCodeFileRunLogs';
 import { useRunCEFile } from '../../../graphql/runCEFile';
 import ConsoleLogHelper from '../../../Helper/logger';
 import { useGlobalEditorState } from '../../../pages/Editor';
-import { DateTime } from 'luxon';
-import { useGlobalMeState } from '../../Navbar';
 
 var loc = window.location,
     new_uri;
@@ -31,9 +29,8 @@ export default function useWebSocketLog(environmentId, run_id, setKeys, setGraph
     const reconnectOnClose = useRef(true);
     const ws = useRef(null);
 
-    // Global states
+    // Global editor state
     const EditorGlobal = useGlobalEditorState();
-    const MeData = useGlobalMeState();
 
     // GraphQL hook
     const getNodeLogs = useGetCodeFileRunLogs();
@@ -102,7 +99,7 @@ export default function useWebSocketLog(environmentId, run_id, setKeys, setGraph
                 // Return if not a log message
                 if (resp.run_id) return;
                 setKeys((k) => [...k, resp.uid]);
-                let text = resp.log === 'Run' || resp.log === 'Success' || resp.log === 'Fail' ? `${formatDate(resp.created_at, MeData.timezone.get())} ${resp.log}` : resp.log;
+                let text = `${formatDate(resp.created_at)} ${resp.log}`;
                 setSocketResponse(text);
                 if ((resp.log_type === 'action' && resp.log === 'Fail') || (resp.log_type === 'action' && resp.log === 'Success')) {
                     EditorGlobal.runState.set(resp.log);
@@ -126,6 +123,19 @@ export default function useWebSocketLog(environmentId, run_id, setKeys, setGraph
     return socketResponse;
 }
 
-export function formatDate(dateString, zone) {
-    return DateTime.fromISO(dateString, { zone }).toFormat('yyyy/LL/d TT');
+export function formatDate(dateString) {
+    const date = new Date(dateString);
+    return (
+        date.getFullYear() +
+        '/' +
+        ('0' + (date.getMonth() + 1)) +
+        '/' +
+        ('0' + date.getDate()).slice(-2) +
+        ' ' +
+        ('0' + date.getHours()).slice(-2) +
+        ':' +
+        ('0' + date.getMinutes()).slice(-2) +
+        ':' +
+        ('0' + date.getSeconds()).slice(-2)
+    );
 }

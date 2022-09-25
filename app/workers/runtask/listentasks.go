@@ -2,37 +2,40 @@ package runtask
 
 import (
 	"context"
+	modelmain "dataplane/mainapp/database/models"
+	"dataplane/workers/config"
+	"dataplane/workers/messageq"
 	"log"
 	"syscall"
 	"time"
-
-	modelmain "github.com/dataplane-app/dataplane/mainapp/database/models"
-
-	wrkerconfig "github.com/dataplane-app/dataplane/workers/config"
-	"github.com/dataplane-app/dataplane/workers/messageq"
 )
+
+type TaskResponse struct {
+	R string
+	M string
+}
 
 func ListenTasks() {
 
 	// Responding to a task request
-	messageq.NATSencoded.Subscribe("task."+wrkerconfig.WorkerGroup+"."+wrkerconfig.WorkerID, func(subj, reply string, msg modelmain.WorkerTaskSend) {
+	messageq.NATSencoded.Subscribe("task."+config.WorkerGroup+"."+config.WorkerID, func(subj, reply string, msg modelmain.WorkerTaskSend) {
 		// log.Println("message:", msg)
 
 		response := "ok"
 		message := "ok"
 		// msg.EnvironmentID
-		if wrkerconfig.EnvID != msg.EnvironmentID {
+		if config.EnvID != msg.EnvironmentID {
 			response = "failed"
 			message = "Incorrect environment"
-			if wrkerconfig.Debug == "true" {
+			if config.Debug == "true" {
 				log.Println("response", response, message)
 			}
 
 			TaskFinal := modelmain.WorkerTasks{
 				TaskID:        msg.TaskID,
-				EnvironmentID: wrkerconfig.EnvID,
+				EnvironmentID: config.EnvID,
 				RunID:         msg.RunID,
-				WorkerID:      wrkerconfig.WorkerID,
+				WorkerID:      config.WorkerID,
 				NodeID:        msg.NodeID,
 				PipelineID:    msg.PipelineID,
 				Status:        "Fail",
@@ -42,7 +45,7 @@ func ListenTasks() {
 			UpdateWorkerTasks(TaskFinal)
 		}
 
-		x := modelmain.TaskResponse{R: response, M: message}
+		x := TaskResponse{R: response, M: message}
 		messageq.NATSencoded.Publish(reply, x)
 
 		if x.R == "ok" {
@@ -61,11 +64,11 @@ func ListenTasks() {
 			go worker(ctx, msg)
 		}
 	})
-	if wrkerconfig.Debug == "true" {
-		log.Println("🎧 Listening for tasks on subject:", "task."+wrkerconfig.WorkerGroup+"."+wrkerconfig.WorkerID)
+	if config.Debug == "true" {
+		log.Println("🎧 Listening for tasks on subject:", "task."+config.WorkerGroup+"."+config.WorkerID)
 	}
 
-	messageq.NATSencoded.Subscribe("taskcancel."+wrkerconfig.WorkerGroup+"."+wrkerconfig.WorkerID, func(subj, reply string, msg modelmain.WorkerTaskSend) {
+	messageq.NATSencoded.Subscribe("taskcancel."+config.WorkerGroup+"."+config.WorkerID, func(subj, reply string, msg modelmain.WorkerTaskSend) {
 		// Respond to cancelling a task
 		id := msg.TaskID
 
@@ -84,7 +87,7 @@ func ListenTasks() {
 
 		response := "ok"
 		message := "ok"
-		x := modelmain.TaskResponse{R: response, M: message}
+		x := TaskResponse{R: response, M: message}
 		messageq.NATSencoded.Publish(reply, x)
 
 	})

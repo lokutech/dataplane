@@ -1,13 +1,12 @@
 package admintests
 
 import (
+	"dataplane/mainapp/Tests/testutils"
+	"dataplane/mainapp/database"
 	"log"
 	"net/http"
 	"strings"
 	"testing"
-
-	"github.com/dataplane-app/dataplane/mainapp/Tests/testutils"
-	"github.com/dataplane-app/dataplane/mainapp/database"
 
 	jsoniter "github.com/json-iterator/go"
 	gonanoid "github.com/matoous/go-nanoid/v2"

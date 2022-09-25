@@ -1,17 +1,17 @@
 package worker
 
 import (
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/logging"
+	"dataplane/mainapp/messageq"
+	"dataplane/mainapp/utilities"
+	"dataplane/workers/config"
+	"dataplane/workers/runtask"
 	"errors"
 	"log"
 	"strconv"
 	"time"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
-	"github.com/dataplane-app/dataplane/mainapp/messageq"
-	"github.com/dataplane-app/dataplane/mainapp/utilities"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -85,7 +85,7 @@ func WorkerRunTask(workerGroup string, taskid string, runid string, envID string
 
 			// if a worker group goes offline in between, choose the next in the load balancer and retry
 
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				log.Println("Worker LB:", onlineWorkers[0].LB, onlineWorkers)
 			}
 
@@ -99,7 +99,7 @@ func WorkerRunTask(workerGroup string, taskid string, runid string, envID string
 			}
 
 			// Send the request to the worker
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				log.Println("Selected worker:", onlineWorkers[0].LB, loadbalanceNext)
 			}
 
@@ -119,7 +119,7 @@ func WorkerRunTask(workerGroup string, taskid string, runid string, envID string
 				RunType:       RunType,
 			}
 
-			var response models.TaskResponse
+			var response runtask.TaskResponse
 
 			// log.Println("Task channel: ", "task."+workerGroup+"."+loadbalanceNext)
 
@@ -144,7 +144,7 @@ func WorkerRunTask(workerGroup string, taskid string, runid string, envID string
 			// } else {
 			// 	log.Println(loadbalanceNext + " not online, retrying in 2 seconds (" + strconv.Itoa(i) + " of " + strconv.Itoa(maxRetiresAllowed) + ")")
 			// }
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				log.Println("Send to worker", response.R, response.M)
 			}
 		}
@@ -170,7 +170,7 @@ func WorkerRunTask(workerGroup string, taskid string, runid string, envID string
 
 		errnat := messageq.MsgSend("taskupdate."+envID+"."+runid, TaskFinal)
 		if errnat != nil {
-			if dpconfig.Debug == "true" {
+			if config.Debug == "true" {
 				logging.PrintSecretsRedact(errnat)
 			}
 

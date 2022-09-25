@@ -6,11 +6,6 @@ import (
 	"gorm.io/datatypes"
 )
 
-type TaskResponse struct {
-	R string
-	M string
-}
-
 func (WorkerTasks) IsEntity() {}
 
 func (WorkerTasks) TableName() string {

@@ -1,12 +1,11 @@
 package scheduler
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/messageq"
 	"log"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/messageq"
 
 	"github.com/go-co-op/gocron"
 	"gorm.io/gorm"
@@ -24,7 +23,7 @@ func PipelineSchedulerListen() {
 	messageq.NATSencoded.Subscribe("pipeline-scheduler", func(subj, reply string, msg models.Scheduler) {
 
 		// ========== Update scheduler ========
-		if dpconfig.MainAppID == dpconfig.Leader {
+		if config.MainAppID == config.Leader {
 
 			var PipelineScheduler *gocron.Scheduler
 			var PipelineSJob *gocron.Job
@@ -43,20 +42,20 @@ func PipelineSchedulerListen() {
 					// remove from scheduler -- can't be done here, needs to be removed on leader node
 
 					// log.Println("Scheduler remove by id: ", psc.Timezone, psc.NodeID, "Q")
-					if tmp, ok := dpconfig.PipelineScheduler.Get(psc.Timezone); ok {
+					if tmp, ok := config.PipelineScheduler.Get(psc.Timezone); ok {
 
 						PipelineScheduler = tmp.(*gocron.Scheduler)
 
-						if tmp, ok := dpconfig.PipelineSchedulerJob.Get(psc.NodeID); ok {
+						if tmp, ok := config.PipelineSchedulerJob.Get(psc.NodeID); ok {
 
 							PipelineSJob = tmp.(*gocron.Job)
 
-							if dpconfig.SchedulerDebug == "true" {
+							if config.SchedulerDebug == "true" {
 								log.Println("Scheduler remove by id: ", psc.Timezone, psc.NodeID, "ok")
 							}
 							PipelineScheduler.RemoveByReference(PipelineSJob)
-							dpconfig.PipelineSchedulerJob.Remove(psc.NodeID)
-							// delete(dpconfig.PipelineSchedulerJob, psc.NodeID)
+							config.PipelineSchedulerJob.Remove(psc.NodeID)
+							// delete(config.PipelineSchedulerJob, psc.NodeID)
 
 						}
 					}
@@ -82,19 +81,19 @@ func PipelineSchedulerListen() {
 
 			LoadSingleSchedule(msg)
 
-			if dpconfig.SchedulerDebug == "true" {
-				for i, v := range dpconfig.PipelineScheduler.Keys() {
+			if config.SchedulerDebug == "true" {
+				for i, v := range config.PipelineScheduler.Keys() {
 
-					if tmp, ok := dpconfig.PipelineScheduler.Get(v); ok {
+					if tmp, ok := config.PipelineScheduler.Get(v); ok {
 
 						PipelineScheduler = tmp.(*gocron.Scheduler)
 						log.Println("Scheduler:", i, v, PipelineScheduler.IsRunning(), PipelineScheduler.Len())
 					}
 				}
 
-				for i, v := range dpconfig.PipelineSchedulerJob.Keys() {
+				for i, v := range config.PipelineSchedulerJob.Keys() {
 
-					if tmp, ok := dpconfig.PipelineSchedulerJob.Get(v); ok {
+					if tmp, ok := config.PipelineSchedulerJob.Get(v); ok {
 
 						PSJ := tmp.(*gocron.Job)
 						log.Println("Scheduler Registered job:", i, v, PSJ.NextRun())
@@ -108,7 +107,7 @@ func PipelineSchedulerListen() {
 	// Subscribe to scheduler deletes
 	messageq.NATSencoded.Subscribe("pipeline-scheduler-delete", func(subj, reply string, msg models.Scheduler) {
 
-		if dpconfig.MainAppID == dpconfig.Leader {
+		if config.MainAppID == config.Leader {
 
 			var PipelineScheduler *gocron.Scheduler
 			var PipelineSJob *gocron.Job
@@ -127,20 +126,20 @@ func PipelineSchedulerListen() {
 					// remove from scheduler -- can't be done here, needs to be removed on leader node
 
 					// log.Println("Scheduler remove by id: ", psc.Timezone, psc.NodeID, "Q")
-					if tmp, ok := dpconfig.PipelineScheduler.Get(psc.Timezone); ok {
+					if tmp, ok := config.PipelineScheduler.Get(psc.Timezone); ok {
 
 						PipelineScheduler = tmp.(*gocron.Scheduler)
 
-						if tmp, ok := dpconfig.PipelineSchedulerJob.Get(psc.NodeID); ok {
+						if tmp, ok := config.PipelineSchedulerJob.Get(psc.NodeID); ok {
 
 							PipelineSJob = tmp.(*gocron.Job)
 
-							if dpconfig.SchedulerDebug == "true" {
+							if config.SchedulerDebug == "true" {
 								log.Println("Scheduler remove by id: ", psc.Timezone, psc.NodeID, "ok")
 							}
 							PipelineScheduler.RemoveByReference(PipelineSJob)
-							dpconfig.PipelineSchedulerJob.Remove(psc.NodeID)
-							// delete(dpconfig.PipelineSchedulerJob, psc.NodeID)
+							config.PipelineSchedulerJob.Remove(psc.NodeID)
+							// delete(config.PipelineSchedulerJob, psc.NodeID)
 
 						}
 					}

@@ -1,14 +1,12 @@
 package scheduler
 
 import (
+	"dataplane/mainapp/config"
+	"dataplane/mainapp/database"
+	"dataplane/mainapp/database/models"
+	"dataplane/mainapp/logging"
+	"dataplane/mainapp/pipelines"
 	"log"
-
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
-	"github.com/dataplane-app/dataplane/mainapp/pipelines"
 
 	"github.com/go-co-op/gocron"
 	"github.com/google/uuid"
@@ -17,7 +15,7 @@ import (
 
 func mytask(nodeID string, pipelineID string, environmentID string, timezone string, runType string) {
 
-	if dpconfig.SchedulerDebug == "true" {
+	if config.SchedulerDebug == "true" {
 		log.Println("Schedule run:", nodeID, timezone)
 	}
 
@@ -44,7 +42,7 @@ func mytask(nodeID string, pipelineID string, environmentID string, timezone str
 	}
 
 	if err != nil {
-		if dpconfig.SchedulerDebug == "true" {
+		if config.SchedulerDebug == "true" {
 			logging.PrintSecretsRedact(runType+" schedule run error:", err)
 		}
 	}
@@ -63,12 +61,12 @@ func LoadSingleSchedule(s models.Scheduler) {
 
 		if err == nil && s.Online {
 
-			if tmp, ok := dpconfig.PipelineScheduler.Get(s.Timezone); ok {
+			if tmp, ok := config.PipelineScheduler.Get(s.Timezone); ok {
 				PipelineScheduler = tmp.(*gocron.Scheduler)
 			}
 
 			PSJob, _ := PipelineScheduler.Cron(s.Schedule).Do(mytask, s.NodeID, s.PipelineID, s.EnvironmentID, s.Timezone, s.RunType)
-			dpconfig.PipelineSchedulerJob.Set(s.NodeID, PSJob)
+			config.PipelineSchedulerJob.Set(s.NodeID, PSJob)
 		}
 	case "cronseconds":
 
@@ -76,18 +74,18 @@ func LoadSingleSchedule(s models.Scheduler) {
 
 		if err == nil && s.Online {
 
-			if tmp, ok := dpconfig.PipelineScheduler.Get("UTC"); ok {
+			if tmp, ok := config.PipelineScheduler.Get("UTC"); ok {
 				PipelineScheduler = tmp.(*gocron.Scheduler)
 			}
 
 			PSJob, _ := PipelineScheduler.CronWithSeconds(s.Schedule).Do(mytask, s.NodeID, s.PipelineID, s.EnvironmentID, "UTC", s.RunType)
-			dpconfig.PipelineSchedulerJob.Set(s.NodeID, PSJob)
+			config.PipelineSchedulerJob.Set(s.NodeID, PSJob)
 
 		}
 
 	}
 
-	if dpconfig.SchedulerDebug == "true" {
+	if config.SchedulerDebug == "true" {
 		log.Println("Scheduler add: ", s.Timezone, s.NodeID, "Online:", s.Online, s.RunType)
 	}
 

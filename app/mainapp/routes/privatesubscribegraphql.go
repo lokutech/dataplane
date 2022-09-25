@@ -1,8 +1,8 @@
 package routes
 
 // import (
-// 	generated "github.com/dataplane-app/dataplane/mainapp/graphql/privatesubscribe"
-// 	privategraphql "github.com/dataplane-app/dataplane/mainapp/graphql/privatesubscribe/resolvers"
+// 	generated "dataplane/mainapp/graphql/privatesubscribe"
+// 	privategraphql "dataplane/mainapp/graphql/privatesubscribe/resolvers"
 // 	"net/http"
 
 // 	"github.com/99designs/gqlgen/graphql/handler"
