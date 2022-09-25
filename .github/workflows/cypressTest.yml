@@ -36,3 +36,66 @@ jobs:
 #         env:
 #           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cypress run 2
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+      
+      - name: Cypress run 3
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+          
+      - name: Cypress run 4
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+
+      - name: Cypress run 5
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+
+      - name: Cypress run 6
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+
+      - name: Cypress run 7
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+
+      - name: Cypress run 8
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+          
+      - name: Cypress run 9
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+          
+      - name: Cypress run 10
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
