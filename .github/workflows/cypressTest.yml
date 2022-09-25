@@ -37,6 +37,12 @@ jobs:
 #           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Clear database
+        run: docker-compose -f cypress-docker-compose.yaml down -v
+        
+      - name: Rebuild docker image
+        run: docker-compose -f cypress-docker-compose.yaml up --build -d
+                
       - name: Cypress run 2
         uses: cypress-io/github-action@v4
         with:
@@ -44,6 +50,12 @@ jobs:
           build: yarn
           browser: chrome
       
+      - name: Clear database
+        run: docker-compose -f cypress-docker-compose.yaml down -v
+        
+      - name: Rebuild docker image
+        run: docker-compose -f cypress-docker-compose.yaml up --build -d
+        
       - name: Cypress run 3
         uses: cypress-io/github-action@v4
         with:
