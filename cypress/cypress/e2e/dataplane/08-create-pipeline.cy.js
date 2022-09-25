@@ -9,20 +9,20 @@ describe('Create pipelines', function () {
         cy.get('#email').type('admin@email.com').should('have.value', 'admin@email.com');
         cy.get('#password').type('Hello123!').should('have.value', 'Hello123!');
 
-        cy.get('button').should('be.visible', { timeout: 6000 }).click();
+        cy.get('button').should('exist', { timeout: 6000 }).click();
     });
 
     it('Create Development schedule pipeline', function () {
         cy.url().should('include', '/webapp/');
 
-        cy.contains('Create').should('be.visible', { timeout: 6000 }).click();
+        cy.contains('Create').should('exist', { timeout: 6000 }).click();
 
         cy.get('#name').type('Cypress Schedule Pipeline', { force: true }).should('have.value', 'Cypress Schedule Pipeline');
         cy.get('#description').type('Schedule Pipeline', { force: true }).should('have.value', 'Schedule Pipeline');
-        cy.get('#workerGroup-box').should('be.visible', { timeout: 6000 }).click();
-        cy.get('.MuiAutocomplete-popper').should('be.visible', { timeout: 6000 }).click();
+        cy.get('#workerGroup-box').should('exist', { timeout: 6000 }).click();
+        cy.get('.MuiAutocomplete-popper').should('exist', { timeout: 6000 }).click();
 
-        cy.contains('Save').should('be.visible', { timeout: 6000 }).click();
+        cy.contains('Save').should('exist', { timeout: 6000 }).click();
     });
 
     it('Create Flow', function () {
@@ -33,9 +33,9 @@ describe('Create pipelines', function () {
         // Schedule Trigger
         // Add
         cy.get('#Triggers div:nth-child(3)') // Schedule node
-            .should('be.visible', { timeout: 6000 })
+            .should('exist', { timeout: 6000 })
             .trigger('dragstart', { dataTransfer });
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('drop', { dataTransfer });
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('drop', { dataTransfer });
         cy.contains('Trigger - Scheduler')
             .next()
             .within(() => {
@@ -43,47 +43,40 @@ describe('Create pipelines', function () {
             });
 
         cy.get('.MuiDrawer-root').within(() => {
-            cy.contains('Every minute').should('be.visible', { timeout: 6000 }).click();
-            cy.contains('Save').should('be.visible', { timeout: 6000 }).click();
+            cy.contains('Every minute').should('exist', { timeout: 6000 }).click();
+            cy.contains('Save').should('exist', { timeout: 6000 }).click();
         });
 
         // Move
-        cy.get('.react-flow__node-scheduleNode').should('be.visible', { timeout: 6000 }).trigger('mousedown');
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('mousemove', 100, 100);
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('mouseup');
+        cy.get('.react-flow__node-scheduleNode').should('exist', { timeout: 6000 }).trigger('mousedown');
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('mousemove', 100, 100);
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('mouseup');
 
         // Python node
         // Add
         cy.get('#Processors div:nth-child(2)') // Python node
             .trigger('dragstart', { dataTransfer });
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('drop', { dataTransfer });
-        cy.get('[type=submit]').should('be.visible', { timeout: 6000 }).click(); // Save
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('drop', { dataTransfer });
+        cy.get('[type=submit]').should('exist', { timeout: 6000 }).click(); // Save
 
         // Move
-        cy.get('.react-flow__node-pythonNode').should('be.visible', { timeout: 6000 }).trigger('mousedown');
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('mousemove', 300, 200);
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('mouseup');
+        cy.get('.react-flow__node-pythonNode').should('exist', { timeout: 6000 }).trigger('mousedown');
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('mousemove', 300, 200);
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('mouseup');
 
         // Checkpoint
         // Add
         cy.get('#Checkpoints div:nth-child(2)') // Checkpoint node
-            .should('be.visible', { timeout: 6000 })
+            .should('exist', { timeout: 6000 })
             .trigger('dragstart', { dataTransfer });
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('drop', { dataTransfer });
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('drop', { dataTransfer });
         // Move
-        cy.get('.react-flow__node-checkpointNode').should('be.visible', { timeout: 6000 }).trigger('mousedown');
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('mousemove', 500, 100);
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('mouseup');
+        cy.get('.react-flow__node-checkpointNode').should('exist', { timeout: 6000 }).trigger('mousedown');
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('mousemove', 500, 100);
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('mouseup');
 
         // Connect edges
-        cy.get('.react-flow__node')
-            .contains('Schedule trigger')
-            .parent()
-            .parent()
-            .parent()
-            .find('.source')
-            .should('be.visible', { timeout: 6000 })
-            .trigger('mousedown', { button: 0 });
+        cy.get('.react-flow__node').contains('Schedule trigger').parent().parent().parent().find('.source').should('exist', { timeout: 6000 }).trigger('mousedown', { button: 0 });
 
         cy.get('.react-flow__node')
             .contains('Python')
@@ -92,10 +85,10 @@ describe('Create pipelines', function () {
             .parent()
             .find('.target')
             .trigger('mousemove')
-            .should('be.visible', { timeout: 6000 })
+            .should('exist', { timeout: 6000 })
             .trigger('mouseup', { force: true });
 
-        cy.get('.react-flow__node').contains('Python').parent().parent().parent().find('.source').should('be.visible', { timeout: 6000 }).trigger('mousedown', { button: 0 });
+        cy.get('.react-flow__node').contains('Python').parent().parent().parent().find('.source').should('exist', { timeout: 6000 }).trigger('mousedown', { button: 0 });
 
         cy.get('.react-flow__node')
             .contains('Checkpoint')
@@ -103,9 +96,9 @@ describe('Create pipelines', function () {
             .parent()
             .parent()
             .find('.target')
-            .should('be.visible', { timeout: 6000 })
+            .should('exist', { timeout: 6000 })
             .trigger('mousemove')
-            .should('be.visible', { timeout: 6000 })
+            .should('exist', { timeout: 6000 })
             .trigger('mouseup', { force: true });
 
         cy.contains('Save').click();
@@ -127,14 +120,14 @@ describe('Create pipelines', function () {
     // Add play pipeline
     it('Create Development play pipeline', function () {
         cy.contains('Pipelines').click({ force: true });
-        cy.contains('Create').should('be.visible', { timeout: 6000 }).click();
+        cy.contains('Create').should('exist', { timeout: 6000 }).click();
 
         cy.get('#name').type('Cypress Pipeline', { force: true }).should('have.value', 'Cypress Pipeline');
         cy.get('#description').type('This is a description', { force: true }).should('have.value', 'This is a description');
-        cy.get('#workerGroup-box').should('be.visible', { timeout: 6000 }).click();
-        cy.get('.MuiAutocomplete-popper').should('be.visible', { timeout: 6000 }).click();
+        cy.get('#workerGroup-box').should('exist', { timeout: 6000 }).click();
+        cy.get('.MuiAutocomplete-popper').should('exist', { timeout: 6000 }).click();
 
-        cy.contains('Save').should('be.visible', { timeout: 6000 }).click();
+        cy.contains('Save').should('exist', { timeout: 6000 }).click();
     });
 
     it('Create Flow', function () {
@@ -145,40 +138,40 @@ describe('Create pipelines', function () {
         // Play Trigger
         // Add
         cy.get('#Triggers div:nth-child(2)') // Play node //
-            .should('be.visible', { timeout: 6000 })
+            .should('exist', { timeout: 6000 })
             .trigger('dragstart', { dataTransfer });
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('drop', { dataTransfer });
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('drop', { dataTransfer });
         // Move
-        cy.get('.react-flow__node-playNode').should('be.visible', { timeout: 6000 }).trigger('mousedown');
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('mousemove', 100, 100);
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('mouseup');
+        cy.get('.react-flow__node-playNode').should('exist', { timeout: 6000 }).trigger('mousedown');
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('mousemove', 100, 100);
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('mouseup');
 
         // Python node
         // Add
         cy.get('#Processors div:nth-child(2)') // Python node
-            .should('be.visible', { timeout: 6000 })
+            .should('exist', { timeout: 6000 })
             .trigger('dragstart', { dataTransfer });
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('drop', { dataTransfer });
-        cy.get('[type=submit]').should('be.visible', { timeout: 6000 }).click(); // Save
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('drop', { dataTransfer });
+        cy.get('[type=submit]').should('exist', { timeout: 6000 }).click(); // Save
 
         // Move
-        cy.get('.react-flow__node-pythonNode').should('be.visible', { timeout: 6000 }).trigger('mousedown');
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('mousemove', 300, 200);
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('mouseup');
+        cy.get('.react-flow__node-pythonNode').should('exist', { timeout: 6000 }).trigger('mousedown');
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('mousemove', 300, 200);
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('mouseup');
 
         // Checkpoint
         // Add
         cy.get('#Checkpoints div:nth-child(2)') // Checkpoint node
-            .should('be.visible', { timeout: 6000 })
+            .should('exist', { timeout: 6000 })
             .trigger('dragstart', { dataTransfer });
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('drop', { dataTransfer });
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('drop', { dataTransfer });
         // Move
-        cy.get('.react-flow__node-checkpointNode').should('be.visible', { timeout: 6000 }).trigger('mousedown');
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('mousemove', 500, 100);
-        cy.get('.react-flow__renderer').should('be.visible', { timeout: 6000 }).trigger('mouseup');
+        cy.get('.react-flow__node-checkpointNode').should('exist', { timeout: 6000 }).trigger('mousedown');
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('mousemove', 500, 100);
+        cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('mouseup');
 
         // Connect edges
-        cy.get('.react-flow__node').contains('Play').parent().parent().parent().find('.source').should('be.visible', { timeout: 6000 }).trigger('mousedown', { button: 0 });
+        cy.get('.react-flow__node').contains('Play').parent().parent().parent().find('.source').should('exist', { timeout: 6000 }).trigger('mousedown', { button: 0 });
 
         cy.get('.react-flow__node')
             .contains('Python')
@@ -186,12 +179,12 @@ describe('Create pipelines', function () {
             .parent()
             .parent()
             .find('.target')
-            .should('be.visible', { timeout: 6000 })
+            .should('exist', { timeout: 6000 })
             .trigger('mousemove')
-            .should('be.visible', { timeout: 6000 })
+            .should('exist', { timeout: 6000 })
             .trigger('mouseup', { force: true });
 
-        cy.get('.react-flow__node').contains('Python').parent().parent().parent().find('.source').should('be.visible', { timeout: 6000 }).trigger('mousedown', { button: 0 });
+        cy.get('.react-flow__node').contains('Python').parent().parent().parent().find('.source').should('exist', { timeout: 6000 }).trigger('mousedown', { button: 0 });
 
         cy.get('.react-flow__node')
             .contains('Checkpoint')
@@ -199,12 +192,12 @@ describe('Create pipelines', function () {
             .parent()
             .parent()
             .find('.target')
-            .should('be.visible', { timeout: 6000 })
+            .should('exist', { timeout: 6000 })
             .trigger('mousemove')
-            .should('be.visible', { timeout: 6000 })
+            .should('exist', { timeout: 6000 })
             .trigger('mouseup', { force: true });
 
-        cy.contains('Save').should('be.visible', { timeout: 6000 }).click();
+        cy.contains('Save').should('exist', { timeout: 6000 }).click();
     });
 
     it('Run Flow', function () {
