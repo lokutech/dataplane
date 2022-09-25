@@ -27,6 +27,7 @@ jobs:
           retry-all: true
       
       - name: Cypress run
+        if: success() || failure()
         uses: cypress-io/github-action@v4
         with:
           working-directory: ./cypress
@@ -52,6 +53,7 @@ jobs:
           retry-all: true
                 
       - name: Cypress run 2
+        if: success() || failure()
         uses: cypress-io/github-action@v4
         with:
           working-directory: ./cypress
@@ -73,6 +75,7 @@ jobs:
           retry-all: true
           
       - name: Cypress run 3
+        if: success() || failure()
         uses: cypress-io/github-action@v4
         with:
           working-directory: ./cypress
@@ -80,6 +83,7 @@ jobs:
           browser: chrome
           
       - name: Cypress run 4
+        if: success() || failure()
         uses: cypress-io/github-action@v4
         with:
           working-directory: ./cypress
