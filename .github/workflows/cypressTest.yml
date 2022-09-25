@@ -42,6 +42,14 @@ jobs:
         
       - name: Rebuild docker image
         run: docker-compose -f cypress-docker-compose.yaml up --build -d
+
+      - name: Server health check
+        uses: jtalk/url-health-check-action@v2
+        with:
+          url: http://127.0.0.1:9002/healthz
+          max-attempts: 7
+          retry-delay: 5s
+          retry-all: true
                 
       - name: Cypress run 2
         uses: cypress-io/github-action@v4
@@ -56,6 +64,14 @@ jobs:
       - name: Rebuild docker image
         run: docker-compose -f cypress-docker-compose.yaml up --build -d
         
+      - name: Server health check
+        uses: jtalk/url-health-check-action@v2
+        with:
+          url: http://127.0.0.1:9002/healthz
+          max-attempts: 7
+          retry-delay: 5s
+          retry-all: true
+          
       - name: Cypress run 3
         uses: cypress-io/github-action@v4
         with:
