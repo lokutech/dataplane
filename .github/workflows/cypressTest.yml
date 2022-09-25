@@ -27,7 +27,7 @@ jobs:
           retry-all: true
       
       - name: Cypress run
-        if: success() || failure()
+        if: always()
         uses: cypress-io/github-action@v4
         with:
           working-directory: ./cypress
@@ -39,11 +39,11 @@ jobs:
 #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Clear database
-        run: docker-compose -f cypress-docker-compose.yaml down -v
+        if: always()
+        run: |
+          docker-compose -f cypress-docker-compose.yaml down -v
+          docker-compose -f cypress-docker-compose.yaml up --build -d
         
-      - name: Rebuild docker image
-        run: docker-compose -f cypress-docker-compose.yaml up --build -d
-
       - name: Server health check
         uses: jtalk/url-health-check-action@v2
         with:
@@ -53,7 +53,7 @@ jobs:
           retry-all: true
                 
       - name: Cypress run 2
-        if: success() || failure()
+        if: always()
         uses: cypress-io/github-action@v4
         with:
           working-directory: ./cypress
@@ -61,6 +61,7 @@ jobs:
           browser: chrome
       
       - name: Clear database
+        if: always()
         run: docker-compose -f cypress-docker-compose.yaml down -v
         
       - name: Rebuild docker image
