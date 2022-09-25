@@ -27,7 +27,7 @@ jobs:
           retry-all: true
       
       - name: Cypress run
-        if: success() || failure()
+        if: always()
         uses: cypress-io/github-action@v4
         with:
           working-directory: ./cypress
@@ -52,7 +52,7 @@ jobs:
           retry-all: true
                 
       - name: Cypress run 2
-        if: success() || failure()
+        if: always()
         uses: cypress-io/github-action@v4
         with:
           working-directory: ./cypress
