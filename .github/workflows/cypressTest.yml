@@ -39,11 +39,10 @@ jobs:
 #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Clear database
-        run: docker-compose -f cypress-docker-compose.yaml down -v
+        run: |
+          docker-compose -f cypress-docker-compose.yaml down -v
+          docker-compose -f cypress-docker-compose.yaml up --build -d
         
-      - name: Rebuild docker image
-        run: docker-compose -f cypress-docker-compose.yaml up --build -d
-
       - name: Server health check
         uses: jtalk/url-health-check-action@v2
         with:
