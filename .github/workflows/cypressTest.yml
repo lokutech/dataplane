@@ -27,12 +27,107 @@ jobs:
           retry-all: true
       
       - name: Cypress run
+        if: success() || failure()
         uses: cypress-io/github-action@v4
         with:
           working-directory: ./cypress
           build: yarn
           browser: chrome
-          record: true
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#           record: true
+#         env:
+#           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Clear database
+        run: docker-compose -f cypress-docker-compose.yaml down -v
+        
+      - name: Rebuild docker image
+        run: docker-compose -f cypress-docker-compose.yaml up --build -d
+
+      - name: Server health check
+        uses: jtalk/url-health-check-action@v2
+        with:
+          url: http://127.0.0.1:9002/healthz
+          max-attempts: 7
+          retry-delay: 5s
+          retry-all: true
+                
+      - name: Cypress run 2
+        if: success() || failure()
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+      
+      - name: Clear database
+        run: docker-compose -f cypress-docker-compose.yaml down -v
+        
+      - name: Rebuild docker image
+        run: docker-compose -f cypress-docker-compose.yaml up --build -d
+        
+      - name: Server health check
+        uses: jtalk/url-health-check-action@v2
+        with:
+          url: http://127.0.0.1:9002/healthz
+          max-attempts: 7
+          retry-delay: 5s
+          retry-all: true
+          
+      - name: Cypress run 3
+        if: success() || failure()
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+          
+      - name: Cypress run 4
+        if: success() || failure()
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+
+      - name: Cypress run 5
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+
+      - name: Cypress run 6
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+
+      - name: Cypress run 7
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+
+      - name: Cypress run 8
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+          
+      - name: Cypress run 9
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
+          
+      - name: Cypress run 10
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./cypress
+          build: yarn
+          browser: chrome
