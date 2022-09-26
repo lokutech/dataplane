@@ -1,8 +1,8 @@
-Cypress.Commands.add('drag', (selector, { x, y }) => {
-    return cy.get(selector).trigger('mousedown', { which: 1 }).trigger('mousemove', { clientX: x, clientY: y }).trigger('mouseup', { force: true });
-});
+// Cypress.Commands.add('drag', (selector, { x, y }) => {
+//     return cy.get(selector).trigger('mousedown', { which: 1 }).trigger('mousemove', { clientX: x, clientY: y }).trigger('mouseup', { force: true });
+// });
 
-describe('Create pipelines', { retries: 5 }, function () {
+describe('Create pipelines', function () {
     it('Login', function () {
         cy.visit('http://localhost:9002/webapp/login');
 
@@ -25,7 +25,7 @@ describe('Create pipelines', { retries: 5 }, function () {
         cy.contains('Save').should('exist', { timeout: 6000 }).click();
     });
 
-    it('Create Flow', function () {
+    it('Create Schedule Flow', function () {
         cy.url().should('include', '/webapp/pipelines/flow/');
         cy.wait(50);
 
@@ -107,7 +107,7 @@ describe('Create pipelines', { retries: 5 }, function () {
         cy.contains('Save').click();
     });
 
-    it('Run Flow', function () {
+    it('Run Schedule Flow', function () {
         cy.wait(200);
         cy.contains('Run').click();
         cy.wait(50);
@@ -133,7 +133,7 @@ describe('Create pipelines', { retries: 5 }, function () {
         cy.contains('Save').should('exist', { timeout: 6000 }).click();
     });
 
-    it('Create Flow', function () {
+    it('Create Play Flow', function () {
         cy.url().should('include', '/webapp/pipelines/flow/');
         cy.wait(50);
 
@@ -141,9 +141,10 @@ describe('Create pipelines', { retries: 5 }, function () {
         // Play Trigger
         // Add
         cy.get('#Triggers div:nth-child(2)') // Play node //
-            .should('exist', { timeout: 6000 })
+            .should('have.class', 'MuiGrid-root', { timeout: 6000 })
             .trigger('dragstart', { dataTransfer })
-            .should('exist', { timeout: 6000 });
+            .should('have.class', 'MuiGrid-root', { timeout: 6000 });
+        // .should('exist', { timeout: 6000 });
         cy.get('.react-flow__renderer').should('exist', { timeout: 6000 }).trigger('drop', { dataTransfer });
         // Move
         cy.get('.react-flow__node-playNode').should('exist', { timeout: 6000 }).trigger('mousedown');
@@ -206,7 +207,7 @@ describe('Create pipelines', { retries: 5 }, function () {
         cy.contains('Save').should('exist', { timeout: 6000 }).click();
     });
 
-    it('Run Flow', function () {
+    it('Run Play Flow', function () {
         cy.wait(200);
         cy.contains('Run').click();
         cy.wait(50);
