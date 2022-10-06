@@ -6,14 +6,26 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+        
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule: 
       interval: monthly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+        
   - package-ecosystem: "docker"
     directory: "/docker-build"
     schedule:
       interval: "monthly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+        
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
@@ -21,7 +33,11 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+        
   - package-ecosystem: "npm"
     directory: "/cypress"
     schedule:
       interval: "monthly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
