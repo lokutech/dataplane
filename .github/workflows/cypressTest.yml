@@ -33,7 +33,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -60,7 +60,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -87,7 +87,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -114,7 +114,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -141,7 +141,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -168,7 +168,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -195,7 +195,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -222,7 +222,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -249,7 +249,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -276,7 +276,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -303,7 +303,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -330,7 +330,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -357,7 +357,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -384,7 +384,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -411,7 +411,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -438,7 +438,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -465,7 +465,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -492,7 +492,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -519,7 +519,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -546,7 +546,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -573,7 +573,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -600,7 +600,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -627,7 +627,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -654,7 +654,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -681,7 +681,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -708,7 +708,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -735,7 +735,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -762,7 +762,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -789,7 +789,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -816,7 +816,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -843,7 +843,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -870,7 +870,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -897,7 +897,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -924,7 +924,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -951,7 +951,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -978,7 +978,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1005,7 +1005,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1032,7 +1032,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1059,7 +1059,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1086,7 +1086,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1113,7 +1113,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1140,7 +1140,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1167,7 +1167,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1194,7 +1194,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1221,7 +1221,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1248,7 +1248,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1275,7 +1275,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1302,7 +1302,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1329,7 +1329,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1356,7 +1356,7 @@ jobs:
                   working-directory: ./cypress
                   build: yarn
                   browser: chrome
-                  record: true
+                  # record: true
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
