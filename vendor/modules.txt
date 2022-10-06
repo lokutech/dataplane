@@ -178,7 +178,7 @@ github.com/goccy/go-json/internal/encoder/vm_color_indent
 github.com/goccy/go-json/internal/encoder/vm_indent
 github.com/goccy/go-json/internal/errors
 github.com/goccy/go-json/internal/runtime
-# github.com/gofiber/adaptor/v2 v2.1.24
+# github.com/gofiber/adaptor/v2 v2.1.28
 ## explicit; go 1.14
 github.com/gofiber/adaptor/v2
 # github.com/gofiber/fiber/v2 v2.38.1
@@ -197,9 +197,6 @@ github.com/gofiber/fiber/v2/middleware/cors
 github.com/gofiber/fiber/v2/middleware/logger
 github.com/gofiber/fiber/v2/middleware/recover
 github.com/gofiber/fiber/v2/utils
-# github.com/gofiber/utils v0.1.2
-## explicit; go 1.14
-github.com/gofiber/utils
 # github.com/gofiber/websocket/v2 v2.0.22
 ## explicit; go 1.14
 github.com/gofiber/websocket/v2
