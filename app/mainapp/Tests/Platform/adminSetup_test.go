@@ -3,11 +3,12 @@ package admintests
 import (
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"testing"
 
-	"github.com/dataplane-app/dataplane/mainapp/Tests/testutils"
-	"github.com/dataplane-app/dataplane/mainapp/auth"
+	"github.com/dataplane-app/dataplane/app/mainapp/Tests/testutils"
+	"github.com/dataplane-app/dataplane/app/mainapp/auth"
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/stretchr/testify/assert"
@@ -24,6 +25,7 @@ go test -p 1 -v -count=1 -run TestAdminSetup dataplane/Tests/Platform
 */
 func TestAdminSetup(t *testing.T) {
 
+	auth.JwtKey = []byte(os.Getenv("JWTToken"))
 	testUser := testutils.AdminUser
 	testPassword := testutils.AdminPassword
 

@@ -5,11 +5,11 @@ import (
 	"os"
 	"strings"
 
-	modelmain "github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/utilities"
+	modelmain "github.com/dataplane-app/dataplane/app/mainapp/database/models"
+	"github.com/dataplane-app/dataplane/app/mainapp/utilities"
 
-	wrkerconfig "github.com/dataplane-app/dataplane/workers/config"
-	"github.com/dataplane-app/dataplane/workers/database"
+	"github.com/dataplane-app/dataplane/app/mainapp/database"
+	wrkerconfig "github.com/dataplane-app/dataplane/app/workers/config"
 )
 
 var SecretsArray = []string{}
@@ -31,7 +31,7 @@ func MapSecrets() {
 
 	for _, e := range os.Environ() {
 		pair := strings.SplitN(e, "=", 2)
-		if strings.Contains(pair[0], "secret") {
+		if strings.Contains(pair[0], "secret") && pair[1] != "" {
 
 			SecretsArray = append(SecretsArray, pair[1])
 			SecretsArray = append(SecretsArray, Green+"** Secret **"+Reset)
@@ -63,9 +63,11 @@ func MapSecrets() {
 	for _, e := range loadsecrets {
 
 		decryptValue, _ := utilities.Decrypt(e.Value)
-		os.Setenv(e.EnvVar, decryptValue)
-		SecretsArray = append(SecretsArray, decryptValue)
-		SecretsArray = append(SecretsArray, Green+"** Secret **"+Reset)
+		if decryptValue != "" {
+			os.Setenv(e.EnvVar, decryptValue)
+			SecretsArray = append(SecretsArray, decryptValue)
+			SecretsArray = append(SecretsArray, Green+"** Secret **"+Reset)
+		}
 
 	}
 

@@ -9,14 +9,15 @@ import (
 	"os"
 	"strings"
 
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
+	dpconfig "github.com/dataplane-app/dataplane/app/mainapp/config"
+	"github.com/dataplane-app/dataplane/app/mainapp/utilities"
 
-	"github.com/dataplane-app/dataplane/mainapp/auth"
-	permissions "github.com/dataplane-app/dataplane/mainapp/auth_permissions"
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	publicgraphql "github.com/dataplane-app/dataplane/mainapp/graphql/public"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
+	"github.com/dataplane-app/dataplane/app/mainapp/auth"
+	permissions "github.com/dataplane-app/dataplane/app/mainapp/auth_permissions"
+	"github.com/dataplane-app/dataplane/app/mainapp/database"
+	"github.com/dataplane-app/dataplane/app/mainapp/database/models"
+	publicgraphql "github.com/dataplane-app/dataplane/app/mainapp/graphql/public"
+	"github.com/dataplane-app/dataplane/app/mainapp/logging"
 
 	validator "github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
@@ -44,10 +45,14 @@ func (r *mutationResolver) SetupPlatform(ctx context.Context, input *publicgraph
 	}
 
 	platformData := &models.Platform{
-		ID:           platform.ID,
-		BusinessName: input.PlatformInput.BusinessName,
-		Timezone:     input.PlatformInput.Timezone,
-		Complete:     true,
+		ID:              platform.ID,
+		BusinessName:    input.PlatformInput.BusinessName,
+		Timezone:        input.PlatformInput.Timezone,
+		Complete:        true,
+		JwtToken:        platform.JwtToken,
+		EncryptKey:      platform.EncryptKey,
+		CodeFileStorage: platform.CodeFileStorage,
+		One:             platform.One,
 	}
 
 	userData := &models.Users{
@@ -127,6 +132,16 @@ func (r *mutationResolver) SetupPlatform(ctx context.Context, input *publicgraph
 		}
 		return nil, errors.New("Register database error.")
 	}
+
+	// log.Println("setup jwt token ::: ", platformData.JwtToken, "encrypt key: ", platform.EncryptKey, platform)
+
+	if os.Getenv("secret_encryption_key") == "" {
+		utilities.Encryptphrase = platform.EncryptKey
+	} else {
+		utilities.Encryptphrase = os.Getenv("secret_encryption_key")
+	}
+
+	auth.JwtKey = []byte(platformData.JwtToken)
 
 	// pass back authentication
 	accessToken, refreshToken := auth.GenerateTokens(userData.UserID, userData.Username, userData.UserType)

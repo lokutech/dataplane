@@ -9,21 +9,23 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dataplane-app/dataplane/mainapp/auth"
-	permissions "github.com/dataplane-app/dataplane/mainapp/auth_permissions"
-	distributefilesystem "github.com/dataplane-app/dataplane/mainapp/code_editor/distribute_filesystem"
-	"github.com/dataplane-app/dataplane/mainapp/code_editor/filesystem"
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/database"
-	"github.com/dataplane-app/dataplane/mainapp/database/migrations"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
-	"github.com/dataplane-app/dataplane/mainapp/logging"
-	"github.com/dataplane-app/dataplane/mainapp/messageq"
-	"github.com/dataplane-app/dataplane/mainapp/pipelines"
-	"github.com/dataplane-app/dataplane/mainapp/platform"
-	"github.com/dataplane-app/dataplane/mainapp/scheduler"
-	"github.com/dataplane-app/dataplane/mainapp/scheduler/routinetasks"
-	"github.com/dataplane-app/dataplane/mainapp/worker"
+	"github.com/dataplane-app/dataplane/app/mainapp/auth"
+	permissions "github.com/dataplane-app/dataplane/app/mainapp/auth_permissions"
+	distributefilesystem "github.com/dataplane-app/dataplane/app/mainapp/code_editor/distribute_filesystem"
+	"github.com/dataplane-app/dataplane/app/mainapp/code_editor/filesystem"
+	dpconfig "github.com/dataplane-app/dataplane/app/mainapp/config"
+	"github.com/dataplane-app/dataplane/app/mainapp/database"
+	"github.com/dataplane-app/dataplane/app/mainapp/database/migrations"
+	"github.com/dataplane-app/dataplane/app/mainapp/database/models"
+	"github.com/dataplane-app/dataplane/app/mainapp/logging"
+	"github.com/dataplane-app/dataplane/app/mainapp/messageq"
+	"github.com/dataplane-app/dataplane/app/mainapp/pipelines"
+	"github.com/dataplane-app/dataplane/app/mainapp/platform"
+	"github.com/dataplane-app/dataplane/app/mainapp/scheduler"
+	"github.com/dataplane-app/dataplane/app/mainapp/scheduler/routinetasks"
+	"github.com/dataplane-app/dataplane/app/mainapp/utilities"
+	"github.com/dataplane-app/dataplane/app/mainapp/worker"
+	gonanoid "github.com/matoous/go-nanoid/v2"
 
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-co-op/gocron"
@@ -182,7 +184,31 @@ func Setup(port string) *fiber.App {
 		log.Println("💽 Sync files to database")
 		distributefilesystem.MoveCodeFilesToDB(database.DBConn)
 		distributefilesystem.DeployFilesToDB(database.DBConn)
-		database.DBConn.Model(&models.Platform{}).Where("id = ?", u.ID).Update("code_file_storage", dpconfig.FSCodeFileStorage)
+		database.DBConn.Model(&models.Platform{}).Where("id = ?", dpconfig.PlatformID).Update("code_file_storage", dpconfig.FSCodeFileStorage)
+	}
+
+	/* Load JWT secret if doesn't exist */
+	if u.JwtToken == "" {
+		tokenGen := uuid.NewString()
+		database.DBConn.Model(&models.Platform{}).Where("id = ?", dpconfig.PlatformID).Update("jwt_token", tokenGen)
+		u.JwtToken = tokenGen
+	}
+
+	auth.JwtKey = []byte(u.JwtToken)
+
+	/* Load encrypt key if doesn't exist */
+	if u.EncryptKey == "" {
+		encryptkey, err := gonanoid.Generate("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", 32)
+		if err == nil {
+			database.DBConn.Model(&models.Platform{}).Where("id = ?", dpconfig.PlatformID).Update("encrypt_key", encryptkey)
+		}
+		u.EncryptKey = encryptkey
+	}
+
+	if os.Getenv("secret_encryption_key") == "" {
+		utilities.Encryptphrase = u.EncryptKey
+	} else {
+		utilities.Encryptphrase = os.Getenv("secret_encryption_key")
 	}
 
 	/* --- Run the scheduler ---- */
@@ -395,7 +421,7 @@ func Setup(port string) *fiber.App {
 	})
 
 	// Pipeline API Trigger public
-	app.Post("/app/public/api-trigger/:id", auth.ApiAuthMiddle(), func(c *fiber.Ctx) error {
+	app.Post("/publicapi/api-trigger/:id", auth.ApiAuthMiddle("public"), func(c *fiber.Ctx) error {
 		c.Accepts("application/json")
 		pipelineID := c.Locals("pipelineID").(string)
 		environmentID := c.Locals("environmentID").(string)
@@ -410,7 +436,7 @@ func Setup(port string) *fiber.App {
 	})
 
 	// Pipeline API Trigger private
-	app.Post("/app/private/api-trigger/:id", auth.ApiAuthMiddle(), func(c *fiber.Ctx) error {
+	app.Post("/privateapi/api-trigger/:id", auth.ApiAuthMiddle("private"), func(c *fiber.Ctx) error {
 		c.Accepts("application/json")
 		pipelineID := c.Locals("pipelineID").(string)
 		environmentID := c.Locals("environmentID").(string)

@@ -3,17 +3,19 @@ package routes
 import (
 	"fmt"
 	"log"
+	"os"
 	"regexp"
 	"time"
 
-	wrkerconfig "github.com/dataplane-app/dataplane/workers/config"
-	"github.com/dataplane-app/dataplane/workers/database"
-	"github.com/dataplane-app/dataplane/workers/database/models"
-	"github.com/dataplane-app/dataplane/workers/messageq"
-	runcodeworker "github.com/dataplane-app/dataplane/workers/runcode"
-	"github.com/dataplane-app/dataplane/workers/runtask"
-	"github.com/dataplane-app/dataplane/workers/secrets"
-	"github.com/dataplane-app/dataplane/workers/workerhealth"
+	"github.com/dataplane-app/dataplane/app/mainapp/database"
+	modelmain "github.com/dataplane-app/dataplane/app/mainapp/database/models"
+	"github.com/dataplane-app/dataplane/app/mainapp/utilities"
+	wrkerconfig "github.com/dataplane-app/dataplane/app/workers/config"
+	"github.com/dataplane-app/dataplane/app/workers/messageq"
+	runcodeworker "github.com/dataplane-app/dataplane/app/workers/runcode"
+	"github.com/dataplane-app/dataplane/app/workers/runtask"
+	"github.com/dataplane-app/dataplane/app/workers/secrets"
+	"github.com/dataplane-app/dataplane/app/workers/workerhealth"
 
 	"github.com/go-co-op/gocron"
 	"github.com/gofiber/fiber/v2"
@@ -59,11 +61,19 @@ func Setup(port string) *fiber.App {
 
 	// ----- Load platformID ------
 	for i := 0; i < 50000; i++ {
-		platform := models.Platform{}
+		platform := modelmain.Platform{}
 		database.DBConn.First(&platform)
 		wrkerconfig.PlatformID = platform.ID
 
 		if wrkerconfig.PlatformID != "" {
+
+			/* Load encryption key */
+			if os.Getenv("secret_encryption_key") == "" {
+				utilities.Encryptphrase = platform.EncryptKey
+			} else {
+				utilities.Encryptphrase = os.Getenv("secret_encryption_key")
+			}
+
 			break
 		} else {
 			log.Printf("😩 Platform not setup - waiting for main app to start: try number. %d, retry in 5 seconds", i+1)
@@ -74,7 +84,7 @@ func Setup(port string) *fiber.App {
 
 	log.Println("🎯 Platform ID: ", wrkerconfig.PlatformID)
 
-	e := models.Environment{}
+	e := modelmain.Environment{}
 	database.DBConn.First(&e, "name = ?", wrkerconfig.WorkerEnv)
 
 	// if e.Name != wrkerconfig.WorkerEnv  {
@@ -83,7 +93,7 @@ func Setup(port string) *fiber.App {
 
 	// For first time users create a development environment ID
 	if e.ID == "" && wrkerconfig.WorkerEnv == "Development" {
-		e = models.Environment{
+		e = modelmain.Environment{
 			ID:         uuid.New().String(),
 			Name:       "Development",
 			PlatformID: wrkerconfig.PlatformID,

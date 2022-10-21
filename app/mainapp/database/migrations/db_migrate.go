@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"strings"
 
-	dpconfig "github.com/dataplane-app/dataplane/mainapp/config"
-	"github.com/dataplane-app/dataplane/mainapp/database/models"
+	dpconfig "github.com/dataplane-app/dataplane/app/mainapp/config"
+	"github.com/dataplane-app/dataplane/app/mainapp/database/models"
 
 	// "gorm.io/gorm/clause"
-	"github.com/dataplane-app/dataplane/mainapp/code_editor/filesystem"
+	"github.com/dataplane-app/dataplane/app/mainapp/code_editor/filesystem"
 
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/logger"
@@ -23,16 +23,16 @@ import (
 
 func Migrate() {
 
-	migrateVersion := "0.0.53"
+	migrateVersion := "0.0.54"
 
 	connectURL := fmt.Sprintf(
 		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
-		os.Getenv("secret_db_user"),
+		os.Getenv("DP_DB_USER"),
 		os.Getenv("secret_db_pwd"),
-		os.Getenv("secret_db_host"),
-		os.Getenv("secret_db_port"),
-		os.Getenv("secret_db_database"),
-		os.Getenv("secret_db_ssl"),
+		os.Getenv("DP_DB_HOST"),
+		os.Getenv("DP_DB_PORT"),
+		os.Getenv("DP_DB_DATABASE"),
+		os.Getenv("DP_DB_SSL"),
 	)
 
 	var l logger.LogLevel

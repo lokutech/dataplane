@@ -3,11 +3,12 @@ package usertests
 import (
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"testing"
 
-	"github.com/dataplane-app/dataplane/mainapp/Tests/testutils"
-	"github.com/dataplane-app/dataplane/mainapp/auth"
+	"github.com/dataplane-app/dataplane/app/mainapp/Tests/testutils"
+	"github.com/dataplane-app/dataplane/app/mainapp/auth"
 
 	"github.com/bxcodec/faker/v3"
 	jsoniter "github.com/json-iterator/go"
@@ -24,6 +25,7 @@ go test -p 1 -v -count=1 -run TestUserAuth dataplane/Tests/users
 */
 func TestUserAuth(t *testing.T) {
 
+	auth.JwtKey = []byte(os.Getenv("JWTToken"))
 	graphQLPublicUrl := testutils.GraphQLUrlPublic
 
 	//--------- Login ------------
