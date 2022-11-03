@@ -28,7 +28,8 @@ describe('Deploy API trigger', function () {
         cy.get('.MuiAutocomplete-popper li[data-option-index="0"]').should('exist', { timeout: 6000 }).click();
 
         // Trigger deployment
-        cy.contains('localhost').then((path) => {
+        cy.contains('deployment/').then((path) => {
+            console.log('🚀 ~ file: 16-deploy-api-trigger.cy.js ~ line 32 ~ cy.contains ~ path', path.text());
             cy.contains('button', 'Deploy')
                 .should('exist', { timeout: 6000 })
                 .click()
