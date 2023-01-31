@@ -180,8 +180,8 @@ github.com/go-redis/redis/v8/internal/pool
 github.com/go-redis/redis/v8/internal/proto
 github.com/go-redis/redis/v8/internal/rand
 github.com/go-redis/redis/v8/internal/util
-# github.com/go-sql-driver/mysql v1.6.0
-## explicit; go 1.10
+# github.com/go-sql-driver/mysql v1.7.0
+## explicit; go 1.13
 github.com/go-sql-driver/mysql
 # github.com/goccy/go-json v0.9.7
 ## explicit; go 1.12
@@ -566,10 +566,10 @@ gopkg.in/warnings.v0
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3
-# gorm.io/datatypes v1.0.7
-## explicit; go 1.14
+# gorm.io/datatypes v1.1.0
+## explicit; go 1.18
 gorm.io/datatypes
-# gorm.io/driver/mysql v1.3.4
+# gorm.io/driver/mysql v1.4.4
 ## explicit; go 1.14
 gorm.io/driver/mysql
 # gorm.io/driver/postgres v1.4.6
