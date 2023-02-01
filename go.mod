@@ -4,7 +4,6 @@ go 1.18
 
 require (
 	github.com/99designs/gqlgen v0.17.20
-	github.com/Masterminds/semver v1.5.0
 	github.com/bxcodec/faker/v3 v3.8.0
 	github.com/bxcodec/faker/v4 v4.0.0-beta.2
 	github.com/go-co-op/gocron v1.13.0
@@ -27,8 +26,9 @@ require (
 	github.com/pieterclaerhout/go-log v1.14.0
 	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/stretchr/testify v1.8.0
+	github.com/tidwall/gjson v1.14.4
 	github.com/tidwall/sjson v1.2.5
-	github.com/valyala/fasthttp v1.40.0
+	github.com/valyala/fasthttp v1.44.0
 	github.com/vektah/gqlparser/v2 v2.5.1
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
 	gopkg.in/yaml.v3 v3.0.1
@@ -75,7 +75,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/kevinburke/ssh_config v1.2.0 // indirect
-	github.com/klauspost/compress v1.15.5 // indirect
+	github.com/klauspost/compress v1.15.9 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/lestrrat-go/backoff/v2 v2.0.8 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.1 // indirect
@@ -102,7 +102,6 @@ require (
 	github.com/sanity-io/litter v1.5.5 // indirect
 	github.com/savsgio/gotils v0.0.0-20220401102855-e56b59f40436 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
-	github.com/tidwall/gjson v1.14.4 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tklauser/go-sysconf v0.3.10 // indirect
@@ -114,7 +113,7 @@ require (
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
-	golang.org/x/net v0.0.0-20220722155237-a158d28d115b // indirect
+	golang.org/x/net v0.0.0-20220906165146-f3363e06e74c // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
 	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab // indirect
 	golang.org/x/text v0.3.7 // indirect
