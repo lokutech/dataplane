@@ -7,7 +7,7 @@ require (
 	github.com/bxcodec/faker/v3 v3.8.0
 	github.com/bxcodec/faker/v4 v4.0.0-beta.2
 	github.com/go-co-op/gocron v1.18.0
-	github.com/go-git/go-billy/v5 v5.3.1
+	github.com/go-git/go-billy/v5 v5.4.1
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/go-redis/redis/v8 v8.11.5
