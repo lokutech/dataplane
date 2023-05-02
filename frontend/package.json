@@ -15,7 +15,7 @@
         "@fortawesome/react-fontawesome": "^0.2.0",
         "@hookstate/core": "3.0.13",
         "@mui/lab": "^5.0.0-alpha.71",
-        "@mui/material": "^5.2.3",
+        "@mui/material": "^5.12.2",
         "@opuscapita/react-filemanager": "^1.1.11",
         "@opuscapita/react-filemanager-connector-node-v1": "^1.1.11",
         "@testing-library/jest-dom": "^5.11.4",
