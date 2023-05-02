@@ -1,7 +1,7 @@
 package cors
 
 import (
-	"net/http"
+	"log"
 	"strconv"
 	"strings"
 
@@ -14,6 +14,12 @@ type Config struct {
 	//
 	// Optional. Default: nil
 	Next func(c *fiber.Ctx) bool
+
+	// AllowOriginsFunc defines a function that will set the 'access-control-allow-origin'
+	// response header to the 'origin' request header when returned true.
+	//
+	// Optional. Default: nil
+	AllowOriginsFunc func(origin string) bool
 
 	// AllowOrigin defines a list of origins that may access the resource.
 	//
@@ -55,8 +61,9 @@ type Config struct {
 
 // ConfigDefault is the default config
 var ConfigDefault = Config{
-	Next:         nil,
-	AllowOrigins: "*",
+	Next:             nil,
+	AllowOriginsFunc: nil,
+	AllowOrigins:     "*",
 	AllowMethods: strings.Join([]string{
 		fiber.MethodGet,
 		fiber.MethodPost,
@@ -89,6 +96,11 @@ func New(config ...Config) fiber.Handler {
 		}
 	}
 
+	// Warning logs if both AllowOrigins and AllowOriginsFunc are set
+	if cfg.AllowOrigins != "" && cfg.AllowOriginsFunc != nil {
+		log.Printf("[CORS] - [Warning] Both 'AllowOrigins' and 'AllowOriginsFunc' have been defined.\n")
+	}
+
 	// Convert string to slice
 	allowOrigins := strings.Split(strings.ReplaceAll(cfg.AllowOrigins, " ", ""), ",")
 
@@ -113,11 +125,11 @@ func New(config ...Config) fiber.Handler {
 
 		// Check allowed origins
 		for _, o := range allowOrigins {
-			if o == "*" && cfg.AllowCredentials {
-				allowOrigin = origin
+			if o == "*" {
+				allowOrigin = "*"
 				break
 			}
-			if o == "*" || o == origin {
+			if o == origin {
 				allowOrigin = o
 				break
 			}
@@ -127,8 +139,17 @@ func New(config ...Config) fiber.Handler {
 			}
 		}
 
+		// Run AllowOriginsFunc if the logic for
+		// handling the value in 'AllowOrigins' does
+		// not result in allowOrigin being set.
+		if allowOrigin == "" && cfg.AllowOriginsFunc != nil {
+			if cfg.AllowOriginsFunc(origin) {
+				allowOrigin = origin
+			}
+		}
+
 		// Simple request
-		if c.Method() != http.MethodOptions {
+		if c.Method() != fiber.MethodOptions {
 			c.Vary(fiber.HeaderOrigin)
 			c.Set(fiber.HeaderAccessControlAllowOrigin, allowOrigin)
 
